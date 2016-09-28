@@ -2591,17 +2591,17 @@ static int cpumR3CpuIdSanitize(PVM pVM, PCPUM pCpum, PCPUMCPUIDCONFIG pConfig)
                            //| X86_CPUID_FEATURE_ECX_PCID  - not implemented yet.
                            //| X86_CPUID_FEATURE_ECX_DCA   - not implemented yet.
                            | (pConfig->enmSse41 ? X86_CPUID_FEATURE_ECX_SSE4_1 : 0)
-                           | (pConfig->enmSse42 ? X86_CPUID_FEATURE_ECX_SSE4_2 : 0)
+                           //| (pConfig->enmSse42 ? X86_CPUID_FEATURE_ECX_SSE4_2 : 0) // TETRANE
                            //| X86_CPUID_FEATURE_ECX_X2APIC - turned on later by the device if enabled.
-                           | (pConfig->enmMovBe ? X86_CPUID_FEATURE_ECX_MOVBE : 0)
-                           | (pConfig->enmPopCnt ? X86_CPUID_FEATURE_ECX_POPCNT : 0)
+                           //| (pConfig->enmMovBe ? X86_CPUID_FEATURE_ECX_MOVBE : 0) // TETRANE
+                           //| (pConfig->enmPopCnt ? X86_CPUID_FEATURE_ECX_POPCNT : 0) // TETRANE
                            //| X86_CPUID_FEATURE_ECX_TSCDEADL - not implemented yet.
-                           | (pConfig->enmAesNi ? X86_CPUID_FEATURE_ECX_AES : 0)
-                           | (pConfig->enmXSave ? X86_CPUID_FEATURE_ECX_XSAVE : 0 )
+                           //| (pConfig->enmAesNi ? X86_CPUID_FEATURE_ECX_AES : 0) // TETRANE - Reven doesn't support aes instruction set yet.
+                           //| (pConfig->enmXSave ? X86_CPUID_FEATURE_ECX_XSAVE : 0 ) // TETRANE - Reven doesn't support xsave & xrstor yet.
                            //| X86_CPUID_FEATURE_ECX_OSXSAVE - mirrors CR4.OSXSAVE state, set dynamically.
-                           | (pConfig->enmAvx ? X86_CPUID_FEATURE_ECX_AVX : 0)
+                           //| (pConfig->enmAvx ? X86_CPUID_FEATURE_ECX_AVX : 0) // TETRANE
                            //| X86_CPUID_FEATURE_ECX_F16C  - not implemented yet.
-                           | (pConfig->enmRdRand ? X86_CPUID_FEATURE_ECX_RDRAND : 0)
+                           //| (pConfig->enmRdRand ? X86_CPUID_FEATURE_ECX_RDRAND : 0) // TETRANE - Reven doesn't support rdrand instruction yet.
                            //| X86_CPUID_FEATURE_ECX_HVP   - Set explicitly later.
                            ;
 
@@ -2776,7 +2776,7 @@ static int cpumR3CpuIdSanitize(PVM pVM, PCPUM pCpum, PCPUMCPUIDCONFIG pConfig)
                                | (pConfig->enmAbm       ? X86_CPUID_AMD_FEATURE_ECX_ABM : 0)
                                | (pConfig->enmSse4A     ? X86_CPUID_AMD_FEATURE_ECX_SSE4A : 0)
                                | (pConfig->enmMisAlnSse ? X86_CPUID_AMD_FEATURE_ECX_MISALNSSE : 0)
-                               | (pConfig->enm3dNowPrf  ? X86_CPUID_AMD_FEATURE_ECX_3DNOWPRF : 0)
+                               // | (pConfig->enm3dNowPrf  ? X86_CPUID_AMD_FEATURE_ECX_3DNOWPRF : 0) - TETRANE - REVEN does not support PREFETCH
                                //| X86_CPUID_AMD_FEATURE_ECX_OSVW
                                //| X86_CPUID_AMD_FEATURE_ECX_IBS
                                //| X86_CPUID_AMD_FEATURE_ECX_XOP
@@ -3017,7 +3017,7 @@ static int cpumR3CpuIdSanitize(PVM pVM, PCPUM pCpum, PCPUMCPUIDCONFIG pConfig)
                                //| X86_CPUID_STEXT_FEATURE_EBX_PQE               RT_BIT(15)
                                //| X86_CPUID_STEXT_FEATURE_EBX_AVX512F           RT_BIT(16)
                                //| RT_BIT(17) - reserved
-                               | (pConfig->enmRdSeed ? X86_CPUID_STEXT_FEATURE_EBX_RDSEED : 0)
+                               // | (pConfig->enmRdSeed ? X86_CPUID_STEXT_FEATURE_EBX_RDSEED : 0) // TETRANE
                                //| X86_CPUID_STEXT_FEATURE_EBX_ADX               RT_BIT(19)
                                //| X86_CPUID_STEXT_FEATURE_EBX_SMAP              RT_BIT(20)
                                //| RT_BIT(21) - reserved
