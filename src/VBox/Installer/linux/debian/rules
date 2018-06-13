@@ -47,17 +47,23 @@ export DH_COMPAT=5
 package  := virtualbox
 verpkg   := reven-virtualbox
 current  := $(shell pwd)
-vboxroot := $(shell cd ../../../..; pwd)
+debian_dir := $(realpath $(dir $(realpath $(firstword $(MAKEFILE_LIST)))))
+debian_tmp_dir := $(realpath $(shell mkdir -p $(current)/debian/; cd $(current)/debian/; pwd))
+vboxroot := $(shell cd $(debian_dir)/../../../../..; pwd)
 pkgdir   := $(if $(PKGDIR),$(PKGDIR),$(shell cd ../../../../..; pwd))
-builddir := $(vboxroot)/out/debian/builddir
-moddir   := $(vboxroot)/out/debian/modules
-prefix   := $(current)/debian/$(verpkg)
+builddir := $(debian_tmp_dir)/builddir
+moddir   := $(debian_tmp_dir)/modules
+prefix   := $(debian_tmp_dir)/$(verpkg)
 arch     := $(shell dpkg --print-architecture)
 verfile  := $(builddir)/version-generated.mk
 ose      := $(if $(OSE),1,$(if $(wildcard $(vboxroot)/src/VBox/RDP/server),,1))
 chrarch  := $(shell if [ `uname -m` = "x86_64" ]; then echo "amd64"; else echo "x86"; fi)
 -include $(vboxroot)/SVN_REVISION
 svnrev   :=$(if $(svn_revision),$(svn_revision),)
+
+ifeq ($(debian_dir),$(debian_tmp_dir))
+ $(error Build in source disabled)
+endif
 
 NOMODS   ?= $(ose)
 NOQT     ?= $(HEADLESS)
@@ -67,7 +73,7 @@ STAGEDISO ?= $(if $(wildcard $(vboxroot)/prebuild/VBoxGuestAdditions.iso),$(vbox
 NOWINE   := $(if $(NODOCS),$(if $(STAGEDISO),1,),)$(ose)
 PYTHON   := $(firstword $(shell which python) $(shell which python3))
 
-debver := $(if $(REVEN_VERSION),$(REVEN_VERSION),$(shell git log -1 --format=%ct | xargs -i~ date +%Y.%m.%d-%H.%M.%S --date=@~ | tr -d '\n'))
+debver := $(if $(REVEN_VERSION),$(REVEN_VERSION),$(shell cd $(vboxroot); git log -1 --format=%ct | xargs -i~ date +%Y.%m.%d-%H.%M.%S --date=@~ | tr -d '\n'))
 ifneq ($(wildcard $(verfile)),)
 include $(verfile)
 ver      := $(VBOX_VERSION_STRING)
@@ -89,7 +95,7 @@ endif
 debrel  := $(if $(shell which lsb_release),_$(shell lsb_release -si)_$(shell lsb_release -sc),unknown)
 
 ifneq ($(MAKECMDGOALS),clean)
- debdist  := $(strip $(shell grep $(debrel) $(current)/distributions_deb | cut -d'=' -f2))
+ debdist  := $(strip $(shell grep $(debrel) $(debian_dir)/../distributions_deb | cut -d'=' -f2))
  ifeq ($(debdist),)
   debdist := $(if $(shell which lsb_release),_$(shell lsb_release -si | tr a-z A-Z)_$(shell lsb_release -sr | sed -e 's/\./_/g' -e 's/\([^_]*\)\(_[^_]*\).*/\1\2/'),unknown)
   # $(error package distribution not detected (debrel=$(debrel)))
@@ -107,8 +113,8 @@ cfg_flags := $(if $(NOQT),--disable-qt,) \
 	     --disable-java \
          --disable-docs
 
-bld_flags := AUTOCFG=$(current)/debian/AutoConfig.kmk \
-	     LOCALCFG=$(current)/debian/LocalConfig.kmk \
+bld_flags := AUTOCFG=$(debian_tmp_dir)/AutoConfig.kmk \
+	     LOCALCFG=$(debian_dir)/LocalConfig.kmk \
 	     PATH_OUT=$(builddir) \
 	     VBOX_WITHOUT_EXTPACK_PUEL_PACKING=1 \
 	     VBOX_WITHOUT_EXTPACK_VNC_PACKING=1 \
@@ -123,34 +129,34 @@ bld_flags := AUTOCFG=$(current)/debian/AutoConfig.kmk \
 	     $(if $(VERBOSE),--print-directory KBUILD_VERBOSE=2,--no-print-directory) \
 	     $(if $(STAGEDISO),VBOX_WITHOUT_ADDITIONS=1,)
 
-configure: debian/configure-stamp
-debian/configure-stamp:
+configure: $(debian_tmp_dir)/control $(debian_tmp_dir)/configure-stamp
+$(debian_tmp_dir)/configure-stamp:
 	dh_testdir
-	cd $(vboxroot) && ./configure --odir=$(current)/debian $(cfg_flags)
-	touch debian/configure-stamp
+	cd $(debian_tmp_dir)/ && $(vboxroot)/configure --odir=$(debian_tmp_dir) $(cfg_flags)
+	touch $(debian_tmp_dir)/configure-stamp
 
-build: debian/control debian/configure-stamp debian/build-stamp
-debian/build-stamp $(verfile):
+build: $(debian_tmp_dir)/control $(debian_tmp_dir)/configure-stamp $(debian_tmp_dir)/build-stamp
+$(debian_tmp_dir)/build-stamp $(verfile):
 	dh_testdir
-	. debian/env.sh && kmk -C $(vboxroot) $(bld_flags) $(if $(NOPARALLEL),-j1,) all
+	. $(debian_tmp_dir)/env.sh && kmk -C $(vboxroot) $(bld_flags) $(if $(NOPARALLEL),-j1,) all
 	$(if $(NODOCS),cp $(vboxroot)/prebuild/UserManual*.pdf $(builddir)/bin,)
 	$(if $(NODOCS),cp $(vboxroot)/prebuild/VirtualBox*.chm $(builddir)/bin,)
 	$(if $(EFI),cp $(vboxroot)/prebuild/VBoxEFI32.fd $(builddir)/bin,)
 	$(if $(EFI),cp $(vboxroot)/prebuild/VBoxEFI64.fd $(builddir)/bin,)
 	mkdir -p $(builddir)/bin/additions
 	$(if $(STAGEDISO),cp $(STAGEDISO)/VBoxGuestAdditions.iso $(builddir)/bin/additions,)
-	. debian/env.sh && kmk -C $(vboxroot) $(bld_flags) \
+	. $(debian_tmp_dir)/env.sh && kmk -C $(vboxroot) $(bld_flags) \
 	    VBOX_NO_LINUX_RUN_INSTALLER=1 \
 	    VBOX_LNX_ADD_ARCHIVE.x86=$(builddir)/bin/additions/VBoxGuestAdditions-x86.tar.bz2 \
 	    VBOX_LNX_ADD_ARCHIVE.amd64=$(builddir)/bin/additions/VBoxGuestAdditions-amd64.tar.bz2 \
 	    VBOX_PATH_ADDITIONS.linux.x86=$(builddir)/bin/additions \
 	    VBOX_PATH_ADDITIONS.linux.amd64=$(builddir)/bin/additions \
 	    packing
-	touch debian/build-stamp
+	touch $(debian_tmp_dir)/build-stamp
 
 # Build modules for every kernel we find in /lib/modules/*
-modules: debian/build-stamp debian/modules-stamp
-debian/modules-stamp: debian/build-stamp
+modules: $(debian_tmp_dir)/build-stamp $(debian_tmp_dir)/modules-stamp
+$(debian_tmp_dir)/modules-stamp: $(debian_tmp_dir)/build-stamp
 	rm -rf $(moddir)
 	mkdir $(moddir)
 	make -C $(builddir)/bin/src/vboxdrv clean
@@ -173,37 +179,42 @@ debian/modules-stamp: debian/build-stamp
 	make -C $(builddir)/bin/src/vboxnetflt clean
 	make -C $(builddir)/bin/src/vboxnetadp clean
 	make -C $(builddir)/bin/src/vboxpci clean
-	touch debian/modules-stamp
+	touch $(debian_tmp_dir)/modules-stamp
 
-.PHONY: debian/control
+.PHONY: $(debian_tmp_dir)/control
 
-debian/control: debian/control.in
-		sed -e "s/@PACKAGE_VERSION@/${debver}/g" debian/control.in > debian/control
+$(debian_tmp_dir)/control: $(debian_dir)/control.in
+	sed -e "s/@PACKAGE_VERSION@/${debver}/g" $(debian_dir)/control.in > $(debian_tmp_dir)/control
 
 clean:
-	touch debian/control
+	touch $(debian_tmp_dir)/control
+	cp -p $(debian_dir)/compat $(debian_tmp_dir)/compat
 	dh_testdir
 	dh_testroot
-	rm -f debian/changelog
-	rm -f debian/AutoConfig.kmk debian/configure.log debian/env.sh
-	rm -f debian/modules-stamp debian/build-stamp debian/configure-stamp
-	rm -f debian/reven-virtualbox.substvars debian/virtualbox*.debhelper
-	rm -f debian/$(verpkg).mime
 	rm -rf $(builddir) $(moddir)
-	rm -rf debian/wine.*
 	dh_clean
-	rm -f debian/control
+	rm -rf $(debian_tmp_dir)
+	rm -f $(current)/VBox.sh
 
 ifeq ($(VBOX_VERSION_MAJOR),)
-binary binary-arch binary-indep: debian/control build $(verfile)
-	$(MAKE) -f debian/rules binary
+binary binary-arch binary-indep: $(debian_tmp_dir)/control build $(verfile)
+	$(MAKE) -f $(debian_dir)/rules binary
 else
 # Build architecture-dependent files here.
-binary binary-arch binary-indep: debian/control build $(if $(NOMODS),,modules)
+binary binary-arch binary-indep: $(debian_tmp_dir)/control build $(if $(NOMODS),,modules)
+	cp -p $(debian_dir)/../VBox.sh $(current)/VBox.sh
+	cp -p $(debian_dir)/compat $(debian_tmp_dir)/compat
+	cp -p $(debian_dir)/copyright $(debian_tmp_dir)/copyright
+	cp -p $(debian_dir)/dirs $(debian_tmp_dir)/dirs
+	cp -p $(debian_dir)/postinst $(debian_tmp_dir)/postinst
+	cp -p $(debian_dir)/preinst $(debian_tmp_dir)/preinst
+	cp -p $(debian_dir)/prerm $(debian_tmp_dir)/prerm
+	cp -p $(debian_dir)/templates $(debian_tmp_dir)/templates
 	dh_testdir
 	dh_testroot
-	dh_clean -k
+	dh_clean -p
 	dh_installdirs
+	mkdir -p $(prefix)/opt
 	tar -xC $(prefix)/opt -f $(builddir)/bin/VirtualBox.tar
 	install -d -g 0 -o 0 $(prefix)/usr/share/applications
 	install -d -g 0 -o 0 $(prefix)/usr/lib
@@ -231,11 +242,11 @@ binary binary-arch binary-indep: debian/control build $(if $(NOMODS),,modules)
 	    rmdir $$i; \
 	done)
 	$(if $(NOQT),,rmdir $(archdir)/icons)
-	$(if $(NOQT),,mv $(archdir)/virtualbox.xml debian/$(verpkg).sharedmimeinfo)
+	$(if $(NOQT),,mv $(archdir)/virtualbox.xml $(debian_tmp_dir)/$(verpkg).sharedmimeinfo)
 	install -d -g 0 -o 0 $(prefix)/usr/share/lintian/overrides
 	sed \
 	    -e 's|%VERPKG%|$(verpkg)|g' \
-	    debian/lintian-override.in > \
+	    $(debian_dir)/lintian-override.in > \
 	   $(prefix)/usr/share/lintian/overrides/$(verpkg)
 	mv $(archdir)/VBox.png \
 	   $(prefix)/usr/share/pixmaps/VBox.png
@@ -315,7 +326,7 @@ endif
 	sed -e 's|%VER%|$(debver)|g' \
 	    -e 's|%DATE%|$(shell date -R)|g' \
 	    -e 's|%VERPKG%|$(verpkg)|g' \
-	    debian/changelog.in > debian/changelog
+	    $(debian_dir)/changelog.in > $(debian_tmp_dir)/changelog
 	dh_installdebconf
 	dh_installchangelogs
 	dh_installmenu
@@ -327,10 +338,10 @@ ifeq ($(DEBUG),)
 	      Qt5Core Qt5Gui Qt5Widgets Qt5PrintSupport Qt5OpenGL Qt5DBus Qt5XcbQpa Qt5X11Extras)) \
 	    --exclude=libqxcb.so --exclude=libqxcb-glx-integration.so
 endif
-	mkdir -p $(current)/debian/$(verpkg)-dbg/usr/lib/$(package)
-	mv $(prefix)/usr/lib/$(package)/*.debug $(current)/debian/$(verpkg)-dbg/usr/lib/$(package)
+	mkdir -p $(debian_tmp_dir)/$(verpkg)-dbg/usr/lib/$(package)
+	mv $(prefix)/usr/lib/$(package)/*.debug $(debian_tmp_dir)/$(verpkg)-dbg/usr/lib/$(package)
 ifeq ($(DEBUG),)
-	mv $(prefix)/usr/lib/debug $(current)/debian/$(verpkg)-dbg/usr/lib
+	mv $(prefix)/usr/lib/debug $(debian_tmp_dir)/$(verpkg)-dbg/usr/lib
 endif
 	$(firstword $(shell which dh_python2) $(shell which dh_python3))
 	dh_compress -X.pdf -X.chm -X LICENSE -X.py
