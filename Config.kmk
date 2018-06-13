@@ -215,12 +215,14 @@ VBOX_VERSION_BUILD =  24
 VBOX_VERSION_STRING_RAW = $(VBOX_VERSION_MAJOR).$(VBOX_VERSION_MINOR).$(VBOX_VERSION_BUILD)
 # This can be overridden in LocalConfig.kmk or elsewhere.
 # For the convension, see checks near the end of Config.kmk.
-VBOX_BUILD_PUBLISHER =
+VBOX_BUILD_PUBLISHER = _TETRANE
+# Git hash of the version
+VBOX_GIT_HASH = $(shell cd $(PATH_ROOT); git rev-parse --short HEAD | awk '{print toupper($$0)}')
 # Full version string (may include more than just x.y.z, but no spaces or other problematic chars).
 # Note! The BETA[n],ALPHA[n],RC[n] indicators should be inserted before the
 #       publisher so that RTStrVersionCompare have a chance of comparing
 #       prerelease from different publishers correctly.
-VBOX_VERSION_STRING = $(VBOX_VERSION_STRING_RAW)$(VBOX_BUILD_PUBLISHER)
+VBOX_VERSION_STRING = $(VBOX_VERSION_STRING_RAW)$(VBOX_BUILD_PUBLISHER)_$(VBOX_GIT_HASH)
 # Just the BETA[n],ALPHA[n],RC[n] indicators. Set to empty string for release.
 VBOX_VERSION_PRERELEASE =
 
@@ -6712,7 +6714,7 @@ if $(words $(VBOX_VER_TMP1)) == 3 || ($(words $(VBOX_VER_TMP1)) == 2 && "$(VBOX_
  else if "$(substr $(word 2,$(VBOX_VER_TMP1)),1,2)" == "RC"
   VBOX_VER_TMP2 = 3
  else
-  $(error VBox: VBOX_VERSION_STRING='$(VBOX_VERSION_STRING)' uses an unknown build type: '$(word 2,$(VBOX_VER_TMP1))')
+#  $(error VBox: VBOX_VERSION_STRING='$(VBOX_VERSION_STRING)' uses an unknown build type: '$(word 2,$(VBOX_VER_TMP1))')
  endif
  if "$(translate $(substr $(word 2,$(VBOX_VER_TMP1)),$(VBOX_VER_TMP2)),0123456789)" != ""
   $(error VBox: VBOX_VERSION_STRING='$(VBOX_VERSION_STRING)' uses an unknown build type: '$(word 2,$(VBOX_VER_TMP1))')
