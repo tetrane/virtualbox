@@ -1040,6 +1040,7 @@ void printUsage(USAGECATEGORY fCategory, uint32_t fSubCategory, PRTSTREAM pStrm)
                      "                                 [--description <desc>] |\n"
                      "                            list [--details|--machinereadable]\n"
                      "                            showvminfo <uuid|snapname>\n"
+                     "                                       [--details|--machinereadable]\n"
                      "\n", SEP);
 
     if (fCategory & USAGE_CLOSEMEDIUM)

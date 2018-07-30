@@ -600,22 +600,66 @@ RTEXITCODE handleSnapshot(HandlerArg *a)
         else if (!strcmp(a->argv[1], "showvminfo"))
         {
             /* exactly one parameter: snapshot name */
-            if (a->argc != 3)
+            if (a->argc < 3)
             {
                 errorSyntax(USAGE_SNAPSHOT, "Expecting snapshot name only");
                 rc = E_FAIL;
                 break;
             }
 
+            bool fDetails = false;
+            bool fMachinereadable = false;
+
+            static const RTGETOPTDEF s_aShowVMInfoOptions[] =
+            {
+                { "--details",          'D', RTGETOPT_REQ_NOTHING },
+                { "--machinereadable",  'M', RTGETOPT_REQ_NOTHING },
+            };
+
+            RTGETOPTSTATE GetOptState;
+            RTGetOptInit(&GetOptState, a->argc, a->argv, s_aShowVMInfoOptions, RT_ELEMENTS(s_aShowVMInfoOptions),
+                         3, RTGETOPTINIT_FLAGS_NO_STD_OPTS);
+            int ch;
+            RTGETOPTUNION Value;
+            while (   SUCCEEDED(rc)
+                   && (ch = RTGetOpt(&GetOptState, &Value)))
+            {
+                switch (ch)
+                {
+                    case 'D':   // --details
+                        fDetails = true;
+                        break;
+
+                    case 'M':   // --machinereadable
+                        fMachinereadable = true;
+                        break;
+
+                    default:
+                        errorGetOpt(USAGE_SNAPSHOT, ch, &Value);
+                        rc = E_FAIL;
+                        break;
+                }
+            }
+            if (FAILED(rc))
+                break;
+
             ComPtr<ISnapshot> pSnapshot;
 
             CHECK_ERROR_BREAK(sessionMachine, FindSnapshot(Bstr(a->argv[2]).raw(),
                                                            pSnapshot.asOutParam()));
 
+            VMINFO_DETAILS details = VMINFO_NONE;
+            if (fMachinereadable)
+                details = VMINFO_MACHINEREADABLE;
+            else if (fDetails)
+                details = VMINFO_FULL;
+            else
+                details = VMINFO_STANDARD;
+
             /* get the machine of the given snapshot */
             ComPtr<IMachine> pMachine2;
             pSnapshot->COMGETTER(Machine)(pMachine2.asOutParam());
-            showVMInfo(a->virtualBox, pMachine2, NULL, VMINFO_NONE);
+            showVMInfo(a->virtualBox, pMachine2, NULL, details);
         }
         else if (!strcmp(a->argv[1], "list"))
             rc = handleSnapshotList(a, sessionMachine) == RTEXITCODE_SUCCESS ? S_OK : E_FAIL;

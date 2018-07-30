@@ -250,8 +250,8 @@ Settings file: '/home/username/.config/VirtualBox/Machines/SUSE 10.2/SUSE 10.2.x
           <computeroutput>hostonlyifs</computeroutput>,
           <computeroutput>natnets</computeroutput> and
           <computeroutput>dhcpservers</computeroutput>, respectively, list
-          bridged network interfaces, host-only network interfaces, 
-          NAT network interfaces and DHCP servers currently available on the 
+          bridged network interfaces, host-only network interfaces,
+          NAT network interfaces and DHCP servers currently available on the
           host. Please see <xref
           linkend="networkingdetails" /> for details on these.</para>
         </listitem>
@@ -316,19 +316,19 @@ Settings file: '/home/username/.config/VirtualBox/Machines/SUSE 10.2/SUSE 10.2.x
 
         <listitem>
           <para><computeroutput>groups</computeroutput> displays
-          details of the VM Groups; see <xref linkend="gui-vmgroups" /> 
+          details of the VM Groups; see <xref linkend="gui-vmgroups" />
           for more information.</para>
         </listitem>
 
         <listitem>
-          <para><computeroutput>webcams</computeroutput> displays a list of 
-          webcams attached to the running VM. The output format is a list of 
-          absolute paths or aliases that were used for attaching the webcams 
+          <para><computeroutput>webcams</computeroutput> displays a list of
+          webcams attached to the running VM. The output format is a list of
+          absolute paths or aliases that were used for attaching the webcams
           to the VM using the 'webcam attach' command.</para>
         </listitem>
 
         <listitem>
-          <para><computeroutput>screenshotformats</computeroutput> displays a 
+          <para><computeroutput>screenshotformats</computeroutput> displays a
           list of available screenshot formats.</para>
         </listitem>
 
@@ -366,8 +366,8 @@ ACPI:            on
 IOAPIC:          on
 ...
     </screen></para>
-    <para>Use the <computeroutput>--machinereadable</computeroutput> option 
-      to produce the same output, but in machine readable format: property="value" on a 
+    <para>Use the <computeroutput>--machinereadable</computeroutput> option
+      to produce the same output, but in machine readable format: property="value" on a
       line by line basis, e.g.:</para>
     <para><screen>
 name="VBoxSDL --startvm OL7.2"
@@ -434,9 +434,9 @@ UUID="457af700-bc0a-4258-aa3c-13b03da171f2"
     used by default as the file name of the settings file (with the extension
     <computeroutput>.xml</computeroutput>) and the machine folder (a subfolder
     of the <computeroutput>.config/VirtualBox/Machines</computeroutput> folder
-    - this folder name may vary depending on the operating system and the 
-    version of VirtualBox which you are using), it must conform to your host 
-    operating system's requirements for file name specifications. If the VM 
+    - this folder name may vary depending on the operating system and the
+    version of VirtualBox which you are using), it must conform to your host
+    operating system's requirements for file name specifications. If the VM
     is later renamed, the file and folder names will change automatically.</para>
 
     <para>However, if the <computeroutput>--basefolder
@@ -445,22 +445,22 @@ UUID="457af700-bc0a-4258-aa3c-13b03da171f2"
     names of the file and the folder will not change if the virtual machine is
     renamed.</para>
 
-    <para>If the <computeroutput>--group &lt;group&gt;, ...</computeroutput>    
-    option is used, the machine will be assigned membership of the specified 
-    VM groups in the list. Note that group ids always start with a 
+    <para>If the <computeroutput>--group &lt;group&gt;, ...</computeroutput>
+    option is used, the machine will be assigned membership of the specified
+    VM groups in the list. Note that group ids always start with a
     <computeroutput>/</computeroutput> and can be nested. By default,
-    VMs are always assigned membership of the group 
+    VMs are always assigned membership of the group
     <computeroutput>/</computeroutput>.</para>
 
     <para>If the <computeroutput>--ostype &lt;ostype&gt;</computeroutput>:
-    option is used, &lt;ostype&gt; specifies the guest operating system 
+    option is used, &lt;ostype&gt; specifies the guest operating system
     to run in the VM. To learn about the available OS options,
     run <computeroutput>VBoxManage list ostypes</computeroutput> .</para>
 
     <para>If the <computeroutput>--uuid &lt;uuid&gt;</computeroutput>:
-    option is used, &lt;uuid&gt; specifies the VM uuid. This must be 
-    unique within the namespace of the host, or that of the VM Group if 
-    it is assigned to a VM group membership. By default, a unique uuid 
+    option is used, &lt;uuid&gt; specifies the VM uuid. This must be
+    unique within the namespace of the host, or that of the VM Group if
+    it is assigned to a VM group membership. By default, a unique uuid
     within the appropriate namespace is automatically generated.
     </para>
 
@@ -527,7 +527,7 @@ UUID="457af700-bc0a-4258-aa3c-13b03da171f2"
 
           <listitem>
             <para><computeroutput>--iconfile &lt;filename&gt;</computeroutput>:
-            This specifies the absolute path on the host file system for the VirtualBox 
+            This specifies the absolute path on the host file system for the VirtualBox
             icon to be displayed in the VM.</para>
           </listitem>
 
@@ -540,8 +540,8 @@ UUID="457af700-bc0a-4258-aa3c-13b03da171f2"
 
           <listitem>
             <para><computeroutput>--pagefusion on|off</computeroutput>:
-            Enables/disables (default) the Page Fusion feature.  
-            The Page Fusion feature minimises memory duplication between VMs with similar 
+            Enables/disables (default) the Page Fusion feature.
+            The Page Fusion feature minimises memory duplication between VMs with similar
             configurations running on the same host.
             See <xref linkend="guestadd-pagefusion" /> for details.</para>
           </listitem>
@@ -568,7 +568,7 @@ UUID="457af700-bc0a-4258-aa3c-13b03da171f2"
 
           <listitem>
             <para><computeroutput>--pcidetach &lt;host PCI address&gt;</computeroutput>:
-            Detaches a specified PCI network controller on the host from the attached PCI bus on the guest. 
+            Detaches a specified PCI network controller on the host from the attached PCI bus on the guest.
             See <xref linkend="pcipassthrough" /> for details. </para>
           </listitem>
 
@@ -628,8 +628,8 @@ UUID="457af700-bc0a-4258-aa3c-13b03da171f2"
 
           <listitem>
             <para><computeroutput>--cpu-profile &lt;host|intel 80[86|286|386]&gt;</computeroutput>:
-            Indicate the use of a profile for guest cpu emulation. Specify either one based  
-            on the host system CPU (host), or one from a number of older Intel 
+            Indicate the use of a profile for guest cpu emulation. Specify either one based
+            on the host system CPU (host), or one from a number of older Intel
             Micro-architectures - 8086, 80286, 80386.</para>
           </listitem>
 
@@ -666,7 +666,7 @@ UUID="457af700-bc0a-4258-aa3c-13b03da171f2"
           <listitem>
             <para><computeroutput>--x2apic on|off</computeroutput>:
             This setting enables(default)/disables CPU x2APIC support.
-            CPU x2APIC support helps operating systems run more efficiently on high 
+            CPU x2APIC support helps operating systems run more efficiently on high
             core count configurations, and optimizes interrupt
             distribution in virtualized environments. Disable when using host/guest
             operating systems incompatible with x2APIC support.</para>
@@ -793,16 +793,16 @@ UUID="457af700-bc0a-4258-aa3c-13b03da171f2"
             the firmware APIC level to be used. Options are: x2apic, apic or
             disabled (no apic or x2apic) respectively.</para>
 
-            <para>Note that if x2apic is specified and x2apic is unsupported by the 
-            VCPU, biosapic downgrades to apic, if supported - otherwise to 'disabled'. 
-            Similarly, if apic is specified, and apic is unsupported results in a 
+            <para>Note that if x2apic is specified and x2apic is unsupported by the
+            VCPU, biosapic downgrades to apic, if supported - otherwise to 'disabled'.
+            Similarly, if apic is specified, and apic is unsupported results in a
             downgrade to 'disabled'.</para>
           </listitem>
 
           <listitem>
             <para><computeroutput>--biossystemtimeoffset &lt;ms&gt;</computeroutput>:
             This specifies a fixed time offset (milliseconds) of the guest relative to
-            the host time. If the offset is positive, the guest time runs ahead of the 
+            the host time. If the offset is positive, the guest time runs ahead of the
             host time.</para>
           </listitem>
 
@@ -842,7 +842,7 @@ UUID="457af700-bc0a-4258-aa3c-13b03da171f2"
 
           <listitem>
             <para><computeroutput>--firmware bios|efi|efi32|efi64</computeroutput>:
-            Specifies which firmware to be used to boot the VM: 
+            Specifies which firmware to be used to boot the VM:
             Available options are BIOS, or one of the EFI options: efi, efi32 or efi64.
             Use EFI options with care.</para>
           </listitem>
@@ -977,12 +977,12 @@ UUID="457af700-bc0a-4258-aa3c-13b03da171f2"
 
           <listitem>
             <para><computeroutput>--nicbandwidthgroup&lt;1-N&gt;
-            none|&lt;name&gt;</computeroutput>: This removes/adds an assignment 
-            of a bandwidth group from/to the specified virtual network interface. 
-            Specifying <computeroutput>none</computeroutput> removes any current 
+            none|&lt;name&gt;</computeroutput>: This removes/adds an assignment
+            of a bandwidth group from/to the specified virtual network interface.
+            Specifying <computeroutput>none</computeroutput> removes any current
             bandwidth group assignment from the specified virtual network interface.
-            Specifying <computeroutput>&lt;name&gt;</computeroutput> adds an 
-            assignment of a bandwidth group to the specified virtual network 
+            Specifying <computeroutput>&lt;name&gt;</computeroutput> adds an
+            assignment of a bandwidth group to the specified virtual network
             interface.</para>
             <para>For details, please see <xref linkend="network_bandwidth_limit" />.</para>
           </listitem>
@@ -1104,9 +1104,9 @@ UUID="457af700-bc0a-4258-aa3c-13b03da171f2"
 
             <listitem>
               <para><computeroutput>--nattbindip&lt;1-N&gt;
-              &lt;ip;&gt;</computeroutput>: VirtualBox's NAT engine normally routes 
-              TCP/IP packets through the default interface assigned by the host's 
-              TCP/IP stack. Use this option to instruct the NAT engine to bind 
+              &lt;ip;&gt;</computeroutput>: VirtualBox's NAT engine normally routes
+              TCP/IP packets through the default interface assigned by the host's
+              TCP/IP stack. Use this option to instruct the NAT engine to bind
               to a specified IP address instead. (Please see <xref
               linkend="nat-adv-settings" /> for details).</para>
             </listitem>
@@ -1234,7 +1234,7 @@ UUID="457af700-bc0a-4258-aa3c-13b03da171f2"
 
             <listitem>
               <para><computeroutput>file &lt;file&gt;</computeroutput>:
-              This redirects the serial port output to a raw file &lt;file&gt; 
+              This redirects the serial port output to a raw file &lt;file&gt;
               specified by its absolute path on the host file system.</para>
             </listitem>
 
@@ -1335,9 +1335,9 @@ UUID="457af700-bc0a-4258-aa3c-13b03da171f2"
         </listitem>
 
         <listitem>
-          <para><computeroutput>--usbrename 
+          <para><computeroutput>--usbrename
           &lt;oldname&gt; &lt;newname&gt;</computeroutput>: This
-          option enables renaming of the VM's virtual USB controller from &lt;oldname&gt; 
+          option enables renaming of the VM's virtual USB controller from &lt;oldname&gt;
           to &lt;newname&gt;.</para>
         </listitem>
       </itemizedlist></para>
@@ -1425,8 +1425,8 @@ UUID="457af700-bc0a-4258-aa3c-13b03da171f2"
 
             <itemizedlist>
               <listitem>
-                <para>For TCP/Ports, &lt;value&gt; should be a port or a range of ports that the VRDE 
-                server can bind to; "default" or "0" means port 3389, the standard port for RDP. 
+                <para>For TCP/Ports, &lt;value&gt; should be a port or a range of ports that the VRDE
+                server can bind to; "default" or "0" means port 3389, the standard port for RDP.
                 For details, see the description for the
                 <computeroutput>--vrdeport</computeroutput> option in <xref
                 linkend="vboxmanage-modifyvm-vrde" />.</para>
@@ -1453,14 +1453,14 @@ UUID="457af700-bc0a-4258-aa3c-13b03da171f2"
               </listitem>
 
               <listitem>
-                <para>For VideoChannel/Quality, &lt;value&gt; should be set between 10 and 100% inclusive, 
-                representing a JPEG compression level on the VRDE server video channel. Lower values mean lower 
+                <para>For VideoChannel/Quality, &lt;value&gt; should be set between 10 and 100% inclusive,
+                representing a JPEG compression level on the VRDE server video channel. Lower values mean lower
                 quality but higher compression. For details, see <xref linkend="vrde-videochannel" />.</para>
               </listitem>
 
               <listitem>
-                <para>For VideoChannel/DownscaleProtection, &lt;value&gt; can be set to "1" to 
-                enable the videochannel downscale protection feature. When enabled, if a video's size equals the shadow buffer 
+                <para>For VideoChannel/DownscaleProtection, &lt;value&gt; can be set to "1" to
+                enable the videochannel downscale protection feature. When enabled, if a video's size equals the shadow buffer
                 size, then it is regarded as a full screen video, and is displayed; but if its size is between fullscreen and the downscale
                 threshold - it is NOT displayed, as it could be an application window, which would be unreadable when downscaled.
                 When the downscale protection feature is disabled, an attempt is always made to display videos.</para>
@@ -1481,7 +1481,7 @@ UUID="457af700-bc0a-4258-aa3c-13b03da171f2"
             To re-enable a feature, use e.g. "Client/DisableClipboard=".
             For details, see <xref linkend="vrde-customization" />.</para>
           </listitem>
- 
+
           <listitem>
             <para><computeroutput>--vrdeproperty "Client/DisableRDPDR=1"</computeroutput></para>
             <para>disables the VRDE server feature: RDP device redirection for smart cards.
@@ -1512,7 +1512,7 @@ UUID="457af700-bc0a-4258-aa3c-13b03da171f2"
                     <para> <computeroutput>RDP</computeroutput> - only Standard RDP Security is accepted.</para>
                   </listitem>
                   <listitem>
-                    <para> <computeroutput>TLS</computeroutput> - only Enhanced RDP Security is accepted. 
+                    <para> <computeroutput>TLS</computeroutput> - only Enhanced RDP Security is accepted.
                     The client must support TLS.</para>
                   </listitem>
                 </itemizedlist>
@@ -1751,7 +1751,7 @@ UUID="457af700-bc0a-4258-aa3c-13b03da171f2"
       <title>USB card reader settings</title>
 
       <para>The following setting defines access to a USB Card Reader by the guest environment.
-      USB card readers are typically used for accessing data on memory cards such as 
+      USB card readers are typically used for accessing data on memory cards such as
       CompactFlash (CF), Secure Digital (SD) or MultiMediaCard (MMC).</para>
       <itemizedlist>
           <listitem>
@@ -1765,8 +1765,8 @@ UUID="457af700-bc0a-4258-aa3c-13b03da171f2"
       <title>Auto starting VMs during host system boot</title>
 
       <para>These settings configure the VM autostart feature,
-      which automatically starts the VM at host system boot-up. 
-      Note that there are pre-requisites that need to be addressed before using this feature. 
+      which automatically starts the VM at host system boot-up.
+      Note that there are pre-requisites that need to be addressed before using this feature.
       See <xref lang="" linkend="autostart" /> for more details.</para>
       <itemizedlist>
         <listitem>
@@ -1979,7 +1979,7 @@ Virtual system 0:
 
     <para>For virtualization products which aren't fully compatible with the
     OVF standard 1.0 you can enable a OVF 0.9 legacy mode with the
-    <computeroutput>--legacy09</computeroutput> option. Other options are 
+    <computeroutput>--legacy09</computeroutput> option. Other options are
     --ovf09, --ovf10, --ovf20.</para>
 
     <para>To specify options controlling the exact content of the appliance
@@ -2118,17 +2118,17 @@ Virtual system 0:
 
         <listitem>
           <para><computeroutput>VBoxManage controlvm &lt;vm&gt;
-          acpipowerbutton</computeroutput> will send an ACPI shutdown signal to 
+          acpipowerbutton</computeroutput> will send an ACPI shutdown signal to
           the VM, as if the power button on a real computer had been pressed.
-          So long as the VM is running a fairly modern guest operating system 
-          providing ACPI support, this should trigger a proper shutdown mechanism 
+          So long as the VM is running a fairly modern guest operating system
+          providing ACPI support, this should trigger a proper shutdown mechanism
           from within the VM.</para>
         </listitem>
 
         <listitem>
           <para><computeroutput>VBoxManage controlvm &lt;vm&gt;
-          keyboardputscancode &lt;hex&gt; [&lt;hex&gt;...]</computeroutput> 
-          Sends commands using keycodes to the VM. Keycodes are documented in the 
+          keyboardputscancode &lt;hex&gt; [&lt;hex&gt;...]</computeroutput>
+          Sends commands using keycodes to the VM. Keycodes are documented in the
           public domain, e.g. http://www.win.tue.nl/~aeb/linux/kbd/scancodes-1.html.</para>
         </listitem>
 
@@ -2170,7 +2170,7 @@ Virtual system 0:
         (<computeroutput>hostonly</computeroutput>) or natnetwork networking
         (<computeroutput>natnetwork</computeroutput>) or access to rarely used
         sub-modes
-        (<computeroutput>generic</computeroutput>). 
+        (<computeroutput>generic</computeroutput>).
         These options correspond to the modes which are described in detail in <xref
         linkend="networkingmodes" />.</para>
       </listitem>
@@ -2242,11 +2242,11 @@ Virtual system 0:
       </listitem>
 
       <listitem>
-        <para><computeroutput>usbattach&lt;uuid|address&gt; [--capturefile &lt;filename&gt;]</computeroutput></para> 
-        <para>and <computeroutput>usbdetach &lt;uuid|address&gt; [--capturefile &lt;filename&gt;]</computeroutput> 
+        <para><computeroutput>usbattach&lt;uuid|address&gt; [--capturefile &lt;filename&gt;]</computeroutput></para>
+        <para>and <computeroutput>usbdetach &lt;uuid|address&gt; [--capturefile &lt;filename&gt;]</computeroutput>
         make host USB devices visible/invisible to the virtual machine on the fly, without the need for
         creating filters first. The USB devices can be specified by UUID
-        (unique identifier) or by address on the host system. Use the --capturefile 
+        (unique identifier) or by address on the host system. Use the --capturefile
         option to specify the absolute path of a file for writing activity logging data.</para>
 
         <para>You can use <computeroutput>VBoxManage list
@@ -2291,8 +2291,8 @@ Virtual system 0:
 
         <itemizedlist>
           <listitem>
-            <para>For TCP/Ports, &lt;value&gt; should be a port or a range of ports that the VRDE 
-            server can bind to; "default" or "0" means port 3389, the standard port for RDP. 
+            <para>For TCP/Ports, &lt;value&gt; should be a port or a range of ports that the VRDE
+            server can bind to; "default" or "0" means port 3389, the standard port for RDP.
             For details, see the description for the
             <computeroutput>--vrdeport</computeroutput> option in <xref
             linkend="vboxmanage-modifyvm-vrde" />.</para>
@@ -2319,14 +2319,14 @@ Virtual system 0:
           </listitem>
 
           <listitem>
-            <para>For VideoChannel/Quality, &lt;value&gt; should be set between 10 and 100% inclusive, 
-            representing a JPEG compression level on the VRDE server video channel. Lower values mean lower 
+            <para>For VideoChannel/Quality, &lt;value&gt; should be set between 10 and 100% inclusive,
+            representing a JPEG compression level on the VRDE server video channel. Lower values mean lower
             quality but higher compression. For details, see <xref linkend="vrde-videochannel" />.</para>
           </listitem>
 
           <listitem>
-            <para>For VideoChannel/DownscaleProtection, &lt;value&gt; can be set to "1" to 
-            enable the videochannel downscale protection feature. When enabled, if a video's size equals the shadow buffer 
+            <para>For VideoChannel/DownscaleProtection, &lt;value&gt; can be set to "1" to
+            enable the videochannel downscale protection feature. When enabled, if a video's size equals the shadow buffer
             size, then it is regarded as a full screen video, and is displayed; but if its size is between fullscreen and the downscale
             threshold - it is NOT displayed, as it could be an application window, which would be unreadable when downscaled.
             When the downscale protection feature is disabled, an attempt is always made to display videos.</para>
@@ -2347,7 +2347,7 @@ Virtual system 0:
         To re-enable a feature, use e.g. "Client/DisableClipboard=".
         For details, see <xref linkend="vrde-customization" />.</para>
       </listitem>
- 
+
       <listitem>
         <para><computeroutput>vrdeproperty "Client/DisableRDPDR=1"</computeroutput></para>
         <para>disables the VRDE server feature: RDP device redirection for smart cards.
@@ -2378,7 +2378,7 @@ Virtual system 0:
                 <para> <computeroutput>RDP</computeroutput> - only Standard RDP Security is accepted.</para>
               </listitem>
               <listitem>
-                <para> <computeroutput>TLS</computeroutput> - only Enhanced RDP Security is accepted. 
+                <para> <computeroutput>TLS</computeroutput> - only Enhanced RDP Security is accepted.
                 The client must support TLS.</para>
               </listitem>
             </itemizedlist>
@@ -2434,7 +2434,7 @@ Virtual system 0:
           </listitem>
         </itemizedlist></para>
       </listitem>
-            
+
       <listitem>
         <para><computeroutput>vrdevideochannelquality
         &lt;percent&gt;</computeroutput>: Sets the image quality for video
@@ -2526,22 +2526,22 @@ Virtual system 0:
       </listitem>
 
       <listitem>
-        <para><computeroutput>teleport --host &lt;name&gt; --port &lt;port&gt;</computeroutput> 
-        can be used to configure a VM as a target for teleporting. 
-        &lt;name&gt; specifies the virtual machine name. &lt;port&gt; specifies the port on the 
+        <para><computeroutput>teleport --host &lt;name&gt; --port &lt;port&gt;</computeroutput>
+        can be used to configure a VM as a target for teleporting.
+        &lt;name&gt; specifies the virtual machine name. &lt;port&gt; specifies the port on the
         virtual machine which should listen for a teleporting request from another
         virtual machine. It can be any free TCP/IP port number (e.g. 6000);
         See <xref linkend="teleporting" /> for an introduction.</para>
         <itemizedlist>
           <listitem>
             <para><computeroutput>--maxdowntime &lt;msec&gt;</computeroutput>:
-            Optional - specifies the maximum downtime (milliseconds) for the 
+            Optional - specifies the maximum downtime (milliseconds) for the
             teleporting target VM.</para>
           </listitem>
 
           <listitem>
             <para><computeroutput>--password
-            &lt;password&gt;</computeroutput>: 
+            &lt;password&gt;</computeroutput>:
             Optional - indicates that the teleporting request will only succeed if the
             source machine specifies the same password as the one given with
             this command.</para>
@@ -2549,7 +2549,7 @@ Virtual system 0:
 
           <listitem>
             <para><computeroutput>--passwordfile
-            &lt;password file&gt;</computeroutput>: 
+            &lt;password file&gt;</computeroutput>:
             Optional - indicates that the teleporting request will only succeed if the
             source machine specifies the same password as the one specified
             in the file given with this command. Use <computeroutput>stdin</computeroutput>
@@ -2575,41 +2575,41 @@ Virtual system 0:
       </listitem>
 
       <listitem>
-        <para><computeroutput>webcam 
-        attach &lt;path|alias&gt; [&lt;key=value&gt;[;&lt;key=value&gt;...]]</computeroutput>: This operation 
-        attaches a webcam to a running VM. Specify the absolute path of the 
-        webcam on the host operating system, or use its alias (obtained by using the command: VBoxManage 
+        <para><computeroutput>webcam
+        attach &lt;path|alias&gt; [&lt;key=value&gt;[;&lt;key=value&gt;...]]</computeroutput>: This operation
+        attaches a webcam to a running VM. Specify the absolute path of the
+        webcam on the host operating system, or use its alias (obtained by using the command: VBoxManage
         list webcams).</para>
 
-        <para>Note that alias '.0' means default video input device on the host operating system, '.1', '.2', 
+        <para>Note that alias '.0' means default video input device on the host operating system, '.1', '.2',
         etc. mean first, second, etc. video input device. The device order is host-specific.</para>
 
-        <para>The optional settings parameter is a ';' delimited list of name/value pairs, enabling configuration 
+        <para>The optional settings parameter is a ';' delimited list of name/value pairs, enabling configuration
         of the emulated webcam device.</para>
 
         <para>The following settings are supported:</para>
 
-        <para>MaxFramerate (default no maximum limit) - this specifies the highest rate (frames/sec) at which 
-        video frames are sent to the guest. Higher frame rates increase CPU load, so this setting can be useful 
-        when there is a need to reduce CPU load. Its default 'value' is 'no maximum limit', thus enabling the 
+        <para>MaxFramerate (default no maximum limit) - this specifies the highest rate (frames/sec) at which
+        video frames are sent to the guest. Higher frame rates increase CPU load, so this setting can be useful
+        when there is a need to reduce CPU load. Its default 'value' is 'no maximum limit', thus enabling the
         guest to use all frame rates supported by the host webcam.</para>
 
-        <para>MaxPayloadTransferSize (default 3060 bytes) - this specifies the maximum number of bytes the emulated 
-        webcam can send to the guest in one buffer. The default is used by some webcams. Higher values can 
-        slightly reduce CPU load, if the guest is able to use larger buffers. 
+        <para>MaxPayloadTransferSize (default 3060 bytes) - this specifies the maximum number of bytes the emulated
+        webcam can send to the guest in one buffer. The default is used by some webcams. Higher values can
+        slightly reduce CPU load, if the guest is able to use larger buffers.
         Note that higher MaxPayloadTransferSize values may be not supported by some guest operating systems.</para>
       </listitem>
 
       <listitem>
-        <para><computeroutput>webcam 
-        detach &lt;path|alias&gt;</computeroutput>: This operation 
-        detaches a webcam from a running VM. Specify the absolute path of the 
+        <para><computeroutput>webcam
+        detach &lt;path|alias&gt;</computeroutput>: This operation
+        detaches a webcam from a running VM. Specify the absolute path of the
         webcam on the host, or use its alias (obtained from webcam list below).</para>
         <para>Note the points below relating to specific Host Operating Systems:</para>
 
         <para>Windows hosts</para>
 
-        <para>When the webcam device is detached from the host, the emulated webcam device 
+        <para>When the webcam device is detached from the host, the emulated webcam device
         is automatically detached from the guest.</para>
 
         <para>Mac OS X hosts</para>
@@ -2617,49 +2617,49 @@ Virtual system 0:
         <para>OS X version 10.7 or newer is required.</para>
 
         <para>When the webcam device is detached from the host, the emulated webcam device remains
-        attached to the guest and must be manually detached using the 
+        attached to the guest and must be manually detached using the
         VBoxManage controlvm "VM name" webcam detach command.</para>
 
         <para>Linux hosts</para>
 
-        <para>When the webcam is detached from the host, the emulated webcam device is automatically detached 
-        from the guest only if the webcam is streaming video. If the emulated webcam is inactive, it     
+        <para>When the webcam is detached from the host, the emulated webcam device is automatically detached
+        from the guest only if the webcam is streaming video. If the emulated webcam is inactive, it
         should be manually detached using the VBoxManage controlvm "VM name" webcam detach command.</para>
       </listitem>
 
       <listitem>
-        <para><computeroutput>webcam list</computeroutput>: This operation 
+        <para><computeroutput>webcam list</computeroutput>: This operation
         lists webcams attached to the running VM.
-        The output is a list of absolute paths or aliases that were used for attaching the webcams 
+        The output is a list of absolute paths or aliases that were used for attaching the webcams
         to the VM using the 'webcam attach' command above.
         </para>
       </listitem>
 
       <listitem>
-        <para><computeroutput>addencpassword 
-        &lt;id&gt; &lt;password file&gt;|- [--removeonsuspend &lt;yes|no&gt;]</computeroutput>: This operation 
-        supplies an encrypted VM specified by &lt;id&gt; with the encryption password to enable a headless start. 
-        Either specify the absolute path of a password file on the host file system: &lt;password file&gt;, or 
+        <para><computeroutput>addencpassword
+        &lt;id&gt; &lt;password file&gt;|- [--removeonsuspend &lt;yes|no&gt;]</computeroutput>: This operation
+        supplies an encrypted VM specified by &lt;id&gt; with the encryption password to enable a headless start.
+        Either specify the absolute path of a password file on the host file system: &lt;password file&gt;, or
         use a '-' to instruct VBoxManage to prompt the user for the encryption password. </para>
 
-        <para><computeroutput>--removeonsuspend &lt;yes|no&gt;</computeroutput> specifies whether to remove/keep 
-        the password from/in VM memory when the VM is suspended. If the VM has been suspended and the password has 
-        been removed, the user needs to resupply the password before the VM can be resumed. This feature is useful 
-        in cases where the user doesn't want the password to be stored in VM memory, and the VM is suspended by a   
+        <para><computeroutput>--removeonsuspend &lt;yes|no&gt;</computeroutput> specifies whether to remove/keep
+        the password from/in VM memory when the VM is suspended. If the VM has been suspended and the password has
+        been removed, the user needs to resupply the password before the VM can be resumed. This feature is useful
+        in cases where the user doesn't want the password to be stored in VM memory, and the VM is suspended by a
         host suspend event.</para>
 
-        <para>Note: On VirtualBox versions 5.0 and later, data stored on hard disk images can be transparently 
-        encrypted for the guest. VirtualBox uses the AES algorithm in XTS mode and supports 128 or 256 
-        bit data encryption keys (DEK). The DEK is stored encrypted in the medium properties, and is 
+        <para>Note: On VirtualBox versions 5.0 and later, data stored on hard disk images can be transparently
+        encrypted for the guest. VirtualBox uses the AES algorithm in XTS mode and supports 128 or 256
+        bit data encryption keys (DEK). The DEK is stored encrypted in the medium properties, and is
         decrypted during VM startup by supplying the encryption password.</para>
 
-        <para>The "VBoxManage encryptmedium" operation is used to create a DEK encrypted medium. 
+        <para>The "VBoxManage encryptmedium" operation is used to create a DEK encrypted medium.
         See <xref linkend="diskencryption-encryption" />" for details.
-        When starting an encrypted VM from a VirtualBox GUI app, the user will be prompted for the 
+        When starting an encrypted VM from a VirtualBox GUI app, the user will be prompted for the
         encryption password.</para>
 
         <para>For a headless encrypted VM start, use:</para>
-    
+
         <para>VBoxManage startvm "vmname" --type headless</para>
 
         <para>followed by:</para>
@@ -2671,13 +2671,13 @@ Virtual system 0:
 
       <listitem>
         <para><computeroutput>removeencpassword &lt;id&gt;</computeroutput>: This operation
-        removes encryption password authorization for password &lt;id&gt; for all encrypted media 
+        removes encryption password authorization for password &lt;id&gt; for all encrypted media
         attached to the VM.</para>
       </listitem>
 
       <listitem>
         <para><computeroutput>removeallencpasswords</computeroutput>: This operation
-        removes encryption password authorization for all passwords for all 
+        removes encryption password authorization for all passwords for all
         encrypted media attached to the VM.</para>
       </listitem>
 
@@ -2715,7 +2715,7 @@ Virtual system 0:
     when a snapshot is restored, the contents of the virtual machine's virtual
     hard disks can be quickly reset by simply dropping the pre-existing
     differencing files.</para>
-  
+
    <screen>VBoxManage snapshot         &lt;uuid|vmname&gt;
                             take &lt;name&gt; [--description &lt;desc&gt;] [--live]
                                  [--uniquename Number,Timestamp,Space,Force] |
@@ -2726,7 +2726,8 @@ Virtual system 0:
                                  [--name &lt;name&gt;]
                                  [--description &lt;desc&gt;] |
                             list [--details|--machinereadable]
-                            showvminfo &lt;uuid|snapname&gt;</screen>
+                            showvminfo &lt;uuid|snapname&gt;
+                                       [--details|--machinereadable]</screen>
 
     <para>The <computeroutput>take</computeroutput> operation takes a snapshot
     of the current state of the virtual machine. You must supply a name for
@@ -3009,37 +3010,37 @@ Virtual system 0:
         <glossentry>
           <glossterm><computeroutput>--discard</computeroutput></glossterm>
           <glossdef>
-            <para>This switch enables the auto-discard feature for the virtual 
-            hard disks. This specifies that a VDI image will be shrunk in response 
+            <para>This switch enables the auto-discard feature for the virtual
+            hard disks. This specifies that a VDI image will be shrunk in response
             to the trim command from the guest OS. The following requirements
             must be met:
 
             <itemizedlist>
               <listitem>
                 <para>The disk format must be VDI.</para>
-              </listitem> 
-              <listitem> 
+              </listitem>
+              <listitem>
                 <para>The size of the cleared area must be at least 1MB.</para>
               </listitem>
               <listitem>
-                <para>VirtualBox will only trim whole 1MB blocks. The VDIs themselves are organized 
-                into 1MB blocks, so this will only work if the space being TRIM-med is at least 
+                <para>VirtualBox will only trim whole 1MB blocks. The VDIs themselves are organized
+                into 1MB blocks, so this will only work if the space being TRIM-med is at least
                 a 1MB contiguous block at a 1MB boundary. On Windows, occasional defrag (with "defrag.exe /D"),
                 or under Linux running "btrfs filesystem defrag" as a background cron job may be
                 beneficial.</para>
               </listitem>
             </itemizedlist></para>
 
-            <para>Notes: the Guest OS must be configured to issue trim command, and typically this 
-            means that the guest OS is made to 'see' the disk as an SSD. Ext4 supports -o discard mount flag; 
-            OSX probably requires additional settings. Windows ought to automatically detect and 
-            support SSDs - at least in versions 7, 8 and 10. Linux exFAT driver (courtesy of Samsung) 
+            <para>Notes: the Guest OS must be configured to issue trim command, and typically this
+            means that the guest OS is made to 'see' the disk as an SSD. Ext4 supports -o discard mount flag;
+            OSX probably requires additional settings. Windows ought to automatically detect and
+            support SSDs - at least in versions 7, 8 and 10. Linux exFAT driver (courtesy of Samsung)
             supports the trim command.</para>
             <para>It is unclear whether Microsoft's implementation of exFAT supports this feature, even
             though that file system was originally designed for flash.</para>
             <para>Alternatively, there are ad hoc methods to issue trim, e.g. Linux fstrim command,
-            part of util-linux package. Earlier solutions required a user to zero out unused areas, 
-            e.g. using zerofree, and explicitly compact the disk - only possible when the VM is 
+            part of util-linux package. Earlier solutions required a user to zero out unused areas,
+            e.g. using zerofree, and explicitly compact the disk - only possible when the VM is
             offline.</para>
           </glossdef>
         </glossentry>
@@ -3135,19 +3136,19 @@ Virtual system 0:
           <glossdef>
             <para>iSCSI Initiator (optional). Note:</para>
 
-            <para>Microsoft iSCSI Initiator is a system, such as a server that attaches to an IP network and initiates requests and receives responses 
-            from an iSCSI target. The SAN components in Microsoft iSCSI Initiator are largely analogous to Fibre Channel SAN components, and 
+            <para>Microsoft iSCSI Initiator is a system, such as a server that attaches to an IP network and initiates requests and receives responses
+            from an iSCSI target. The SAN components in Microsoft iSCSI Initiator are largely analogous to Fibre Channel SAN components, and
             they include the following:/</para>
 
-            <para>To transport blocks of iSCSI commands over the IP network, an iSCSI driver must be installed on the iSCSI host. 
+            <para>To transport blocks of iSCSI commands over the IP network, an iSCSI driver must be installed on the iSCSI host.
             An iSCSI driver is included with Microsoft iSCSI Initiator.</para>
 
-            <para>A gigabit Ethernet adapter that transmits 1000 megabits per second (Mbps) is recommended for the connection to an iSCSI target. Like 
-            standard 10/100 adapters, most gigabit adapters use a preexisting Category 5 or Category 6E cable that. Each port on the adapter is 
+            <para>A gigabit Ethernet adapter that transmits 1000 megabits per second (Mbps) is recommended for the connection to an iSCSI target. Like
+            standard 10/100 adapters, most gigabit adapters use a preexisting Category 5 or Category 6E cable that. Each port on the adapter is
             identified by a unique IP address.</para>
 
-           <para>An iSCSI target is any device that receives iSCSI commands. The device can be an end node, such as a storage device, or it can be an 
-           intermediate device, such as a network bridge between IP and Fibre Channel devices. Each port on the storage array controller or network 
+           <para>An iSCSI target is any device that receives iSCSI commands. The device can be an end node, such as a storage device, or it can be an
+           intermediate device, such as a network bridge between IP and Fibre Channel devices. Each port on the storage array controller or network
            bridge is identified by one or more IP addresses</para>
           </glossdef>
         </glossentry>
@@ -3292,8 +3293,8 @@ Virtual system 0:
       </listitem>
       <listitem>
         <para><computeroutput>list</computeroutput>, shows all bandwidth groups
-        defined for the given VM. Use <computeroutput>--machinereadable</computeroutput> 
-        option to produce the same output, but in machine readable format. This is of the 
+        defined for the given VM. Use <computeroutput>--machinereadable</computeroutput>
+        option to produce the same output, but in machine readable format. This is of the
         form: name="value" on a line by line basis.</para>
       </listitem>
     </itemizedlist>
@@ -3335,7 +3336,7 @@ Virtual system 0:
             <para>Specifies the limit for the given group. Can be changed
             while the VM is running. The default unit is megabytes per
             second. The unit can be changed by specifying one of the
-            following suffixes: <computeroutput>k</computeroutput> for kilobits/s, 
+            following suffixes: <computeroutput>k</computeroutput> for kilobits/s,
             <computeroutput>m</computeroutput> for megabits/s,
             <computeroutput>g</computeroutput> for gigabits/s,
             <computeroutput>K</computeroutput> for kilobytes/s,
@@ -3370,8 +3371,8 @@ Virtual system 0:
 
     <para>The medium must be specified either by its UUID (if the medium
       is registered) or by its filename. Registered images can be listed by
-      <computeroutput>VBoxManage list hdds</computeroutput>, 
-      <computeroutput>VBoxManage list dvds</computeroutput>, 
+      <computeroutput>VBoxManage list hdds</computeroutput>,
+      <computeroutput>VBoxManage list dvds</computeroutput>,
       or <computeroutput>VBoxManage list floppies</computeroutput>, as appropriate.
       (see <xref linkend="vboxmanage-list" />
       for more information).</para>
@@ -3411,8 +3412,8 @@ Virtual system 0:
           <glossterm><computeroutput>--diffparent &lt;uuid&gt;|&lt;filename&gt;</computeroutput></glossterm>
 
           <glossdef>
-            <para>Specifies the differencing image parent, either as a UUID or 
-            by the absolute pathname of the file on the host file system. 
+            <para>Specifies the differencing image parent, either as a UUID or
+            by the absolute pathname of the file on the host file system.
             Useful for sharing a base box disk image among several VMs.</para>
           </glossdef>
         </glossentry>
@@ -3421,7 +3422,7 @@ Virtual system 0:
           <glossterm><computeroutput>--format VDI|VMDK|VHD</computeroutput></glossterm>
 
           <glossdef>
-            <para>Specifies the file format for the output file. Available 
+            <para>Specifies the file format for the output file. Available
             options are VDI, VMDK, VHD. Default is VDI. Optional. </para>
           </glossdef>
         </glossentry>
@@ -3432,7 +3433,7 @@ Virtual system 0:
           <glossdef>
             <para>Specifies any required file format variant(s) for the output file.
             It is a comma-separated list of variant flags. Not all
-            combinations are supported, and specifying mutually incompatible 
+            combinations are supported, and specifying mutually incompatible
             flags results in an error message. Optional.</para>
           </glossdef>
         </glossentry>
@@ -3456,7 +3457,7 @@ Virtual system 0:
                          [--compact]
                          [--resize &lt;megabytes&gt;|--resizebyte &lt;bytes&gt;]
                          [--move &lt;path&gt;</screen><note>
-        <para>For compatibility with earlier versions of VirtualBox, the "modifyvdi" and "modifyhd" 
+        <para>For compatibility with earlier versions of VirtualBox, the "modifyvdi" and "modifyhd"
         commands are also supported and mapped internally to the "modifymedium" command.</para>
       </note></para>
 
@@ -3607,7 +3608,7 @@ Virtual system 0:
     <para>This command sets up, gets or deletes a medium property.
     The syntax is as follows:</para>
 
-    <screen>VBoxManage mediumproperty [disk|dvd|floppy] set &lt;uuid|filename&gt; 
+    <screen>VBoxManage mediumproperty [disk|dvd|floppy] set &lt;uuid|filename&gt;
                                                 &lt;property&gt; &lt;value&gt;</screen>
 
 
@@ -3618,12 +3619,12 @@ Virtual system 0:
         </listitem>
 
         <listitem>
-          <para>Use <computeroutput>&lt;uuid|filename&gt;</computeroutput> to supply either the uuid 
+          <para>Use <computeroutput>&lt;uuid|filename&gt;</computeroutput> to supply either the uuid
           or absolute path of the medium/image to be encrypted.</para>
         </listitem>
- 
+
         <listitem>
-          <para>Use <computeroutput>&lt;property&gt;</computeroutput> to supply the name of the 
+          <para>Use <computeroutput>&lt;property&gt;</computeroutput> to supply the name of the
           property.</para>
         </listitem>
 
@@ -3632,7 +3633,7 @@ Virtual system 0:
         </listitem>
     </itemizedlist></para>
 
-    <screen>VBoxManage mediumproperty [disk|dvd|floppy] get &lt;uuid|filename&gt; 
+    <screen>VBoxManage mediumproperty [disk|dvd|floppy] get &lt;uuid|filename&gt;
                                                 &lt;property&gt;</screen>
     <para><itemizedlist>
         <listitem>
@@ -3651,10 +3652,10 @@ Virtual system 0:
         </listitem>
     </itemizedlist></para>
 
-    <screen>VBoxManage mediumproperty [disk|dvd|floppy] delete &lt;uuid|filename&gt; 
+    <screen>VBoxManage mediumproperty [disk|dvd|floppy] delete &lt;uuid|filename&gt;
                                                    &lt;property&gt;</screen>
 
- 
+
     <para><itemizedlist>
         <listitem>
           <para>Use <computeroutput>&lt;disk|dvd|floppy&gt;</computeroutput> to optionally specify
@@ -3681,7 +3682,7 @@ Virtual system 0:
 
     <para>The syntax is as follows:</para>
 
-    <screen>VBoxManage encryptmedium &lt;uuid|filename&gt; 
+    <screen>VBoxManage encryptmedium &lt;uuid|filename&gt;
                          [--newpassword &lt;file|-&gt;]
                          [--oldpassword &lt;file|-&gt;]
                          [--cipher &lt;cipher id&gt;]
@@ -3689,14 +3690,14 @@ Virtual system 0:
 
     <para><itemizedlist>
         <listitem>
-          <para>use <computeroutput>&lt;uuid|filename&gt;</computeroutput> to supply the 
+          <para>use <computeroutput>&lt;uuid|filename&gt;</computeroutput> to supply the
            uuid or absolute path of the medium/image to be encrypted.</para>
         </listitem>
 
         <listitem>
-          <para>Use <computeroutput>--newpassword &lt;file|-&gt;</computeroutput> to supply a new 
+          <para>Use <computeroutput>--newpassword &lt;file|-&gt;</computeroutput> to supply a new
           encryption password; either specify the absolute pathname of a password file on the host operating system,
-          or <computeroutput>-</computeroutput> to prompt you for the password on the command line. 
+          or <computeroutput>-</computeroutput> to prompt you for the password on the command line.
           Always use the <computeroutput>--newpasswordid</computeroutput> option with this option.</para>
         </listitem>
 
@@ -3705,26 +3706,26 @@ Virtual system 0:
           encryption password; either specify the absolute pathname of a password file on the host operating system,
           or <computeroutput>-</computeroutput> to prompt you for the old password on the command line.</para>
 
-          <para>Use this option to gain access to an encrypted medium/image to change its password using 
+          <para>Use this option to gain access to an encrypted medium/image to change its password using
           <computeroutput>--newpassword</computeroutput> and/or change its encryption using
           <computeroutput>--cipher</computeroutput>.</para>
         </listitem>
 
         <listitem>
-          <para>Use <computeroutput>--cipher &lt;cipher&gt;</computeroutput> to specify the cipher to use for 
-          encryption; this can be either <computeroutput>AES-XTS128-PLAIN64</computeroutput> or 
+          <para>Use <computeroutput>--cipher &lt;cipher&gt;</computeroutput> to specify the cipher to use for
+          encryption; this can be either <computeroutput>AES-XTS128-PLAIN64</computeroutput> or
           <computeroutput>AES-AXTS256-PLAIN64</computeroutput>.</para>
 
-          <para>Use this option to change any existing encryption on the medium/image, or setup new encryption on 
+          <para>Use this option to change any existing encryption on the medium/image, or setup new encryption on
           it for the 1st time.</para>
         </listitem>
 
         <listitem>
           <para>Use <computeroutput>--newpasswordid &lt;password id&gt;</computeroutput> to supply the new password identifier.
-          This can be freely chosen by the user, and is used for correct identification when supplying multiple 
+          This can be freely chosen by the user, and is used for correct identification when supplying multiple
           passwords during VM startup.</para>
 
-          <para>If the user uses the same password when encrypting multiple images and also the same password identifier, the 
+          <para>If the user uses the same password when encrypting multiple images and also the same password identifier, the
           user needs to supply the password only once during VM startup.</para>
         </listitem>
     </itemizedlist></para>
@@ -3740,23 +3741,23 @@ Virtual system 0:
 
     <para>The syntax is as follows:</para>
 
-    <screen>VBoxManage checkmediumpwd &lt;uuid|filename&gt; 
+    <screen>VBoxManage checkmediumpwd &lt;uuid|filename&gt;
                                       &lt;pwd file|-&gt;</screen>
     <para><itemizedlist>
         <listitem>
-          <para>Use <computeroutput>&lt;uuid|filename&gt;</computeroutput> to supply the uuid or absolute path of the 
+          <para>Use <computeroutput>&lt;uuid|filename&gt;</computeroutput> to supply the uuid or absolute path of the
            medium/image to be checked.</para>
         </listitem>
 
         <listitem>
-          <para>Use <computeroutput>&lt;pwd file|-&gt;</computeroutput> to supply the password identifier to be checked. Either 
-          specify the absolute pathname of a password file on the host operating system, or <computeroutput>-</computeroutput> to 
+          <para>Use <computeroutput>&lt;pwd file|-&gt;</computeroutput> to supply the password identifier to be checked. Either
+          specify the absolute pathname of a password file on the host operating system, or <computeroutput>-</computeroutput> to
           prompt you for the password on the command line.</para>
         </listitem>
     </itemizedlist></para>
 
   </sect1>
-  
+
   <sect1>
     <title>VBoxManage convertfromraw</title>
 
@@ -4031,40 +4032,40 @@ Value: 2006.01.01</screen>
     add</computeroutput>. To remove a filter, use <computeroutput>usbfilter
     remove</computeroutput> and specify the index and the target.</para>
 
-    <para>The following is a list of the additional 
-    <computeroutput>usbfilter add</computeroutput> and  
-    <computeroutput>usbfilter modify</computeroutput> options, with detailed 
+    <para>The following is a list of the additional
+    <computeroutput>usbfilter add</computeroutput> and
+    <computeroutput>usbfilter modify</computeroutput> options, with detailed
     explanations on how to use them.</para>
 
     <para><itemizedlist>
         <listitem>
-          <para><computeroutput>--action ignore|hold</computeroutput>Specifies 
-          whether devices that fit the filter description are allowed access by 
-          machines ("hold"), or have access denied ("ignore"). Applies to 
+          <para><computeroutput>--action ignore|hold</computeroutput>Specifies
+          whether devices that fit the filter description are allowed access by
+          machines ("hold"), or have access denied ("ignore"). Applies to
           global filters only.</para>
         </listitem>
 
         <listitem>
           <para><computeroutput>--active yes|no</computeroutput>Specifies whether
-          the USB Filter is active or temporarily disabled. For 
+          the USB Filter is active or temporarily disabled. For
           <computeroutput>usbfilter create</computeroutput> the default is
           active.</para>
         </listitem>
 
         <listitem>
-          <para><computeroutput>--vendorid &lt;XXXX&gt;|""</computeroutput>Specifies 
-           a vendor ID filter - the string representation for the exact matching 
+          <para><computeroutput>--vendorid &lt;XXXX&gt;|""</computeroutput>Specifies
+           a vendor ID filter - the string representation for the exact matching
            has the form XXXX, where X is the hex digit (including leading zeroes).</para>
         </listitem>
 
         <listitem>
-          <para><computeroutput>--productid &lt;XXXX&gt;|""</computeroutput>Specifies 
-           a product ID filter - The string representation for the exact matching has 
+          <para><computeroutput>--productid &lt;XXXX&gt;|""</computeroutput>Specifies
+           a product ID filter - The string representation for the exact matching has
            the form XXXX, where X is the hex digit (including leading zeroes).</para>
         </listitem>
 
         <listitem>
-          <para><computeroutput>--revision &lt;IIFF&gt;|""</computeroutput>Specifies 
+          <para><computeroutput>--revision &lt;IIFF&gt;|""</computeroutput>Specifies
            a revision ID filter - the string representation for the exact matching has
            the form IIFF, where I is the decimal digit of the integer part of the revision,
            and F is the decimal digit of its fractional part (including leading and trailing zeros).
@@ -4074,30 +4075,30 @@ Value: 2006.01.01</screen>
         </listitem>
 
         <listitem>
-          <para><computeroutput>--manufacturer &lt;string&gt;|""</computeroutput>Specifies 
+          <para><computeroutput>--manufacturer &lt;string&gt;|""</computeroutput>Specifies
            a manufacturer ID filter, as a string.</para>
         </listitem>
 
         <listitem>
-          <para><computeroutput>--product &lt;string&gt;|""</computeroutput>Specifies 
+          <para><computeroutput>--product &lt;string&gt;|""</computeroutput>Specifies
            a product ID filter, as a string.</para>
         </listitem>
 
         <listitem>
-          <para><computeroutput>--remote yes|no""</computeroutput>Specifies 
-           a remote filter - indicating whether the device is physically connected to a 
+          <para><computeroutput>--remote yes|no""</computeroutput>Specifies
+           a remote filter - indicating whether the device is physically connected to a
            remote VRDE client or to a local host machine. Applies to VM filters only.</para>
         </listitem>
 
         <listitem>
-          <para><computeroutput>--serialnumber &lt;string&gt;|""</computeroutput>Specifies 
+          <para><computeroutput>--serialnumber &lt;string&gt;|""</computeroutput>Specifies
            a serial number filter, as a string.</para>
         </listitem>
 
         <listitem>
-          <para><computeroutput>--maskedinterfaces &lt;XXXXXXXX&gt;</computeroutput>Specifies 
-           a masked interface filter, for hiding one or more USB interfaces from the guest. 
-           The value is a bit mask where the set bits correspond to the USB interfaces that 
+          <para><computeroutput>--maskedinterfaces &lt;XXXXXXXX&gt;</computeroutput>Specifies
+           a masked interface filter, for hiding one or more USB interfaces from the guest.
+           The value is a bit mask where the set bits correspond to the USB interfaces that
            should be hidden, or masked off. This feature only works on Linux hosts.</para>
         </listitem>
     </itemizedlist></para>
@@ -4123,27 +4124,27 @@ VBoxManage sharedfolder     add &lt;uuid|vmname&gt;
     <para><itemizedlist>
        <listitem>
          <para><computeroutput>&lt;uuid|vmname&gt;</computeroutput>
-         Specifies the UUID or name of the VM whose guest operating system will be 
+         Specifies the UUID or name of the VM whose guest operating system will be
          sharing folders with the host computer. Mandatory.</para>
        </listitem>
 
        <listitem>
          <para><computeroutput>--name &lt;name&gt;</computeroutput>
-         Specifies the name of the share. Each share has a unique name within the 
+         Specifies the name of the share. Each share has a unique name within the
          namespace of the host operating system. Mandatory.</para>
        </listitem>
 
        <listitem>
          <para><computeroutput>-hostpath &lt;hostpath&gt;</computeroutput>
-         Specifies the absolute path on the host operating system of the 
+         Specifies the absolute path on the host operating system of the
          folder/directory to be shared with the guest operating system.
          Mandatory.</para>
        </listitem>
 
        <listitem>
          <para><computeroutput>-transient</computeroutput>
-         Specifies that the share is 'transient', meaning that it can be added 
-         and removed at runtime and does not persist after the VM has stopped.  
+         Specifies that the share is 'transient', meaning that it can be added
+         and removed at runtime and does not persist after the VM has stopped.
          Optional.</para>
        </listitem>
 
@@ -4151,15 +4152,15 @@ VBoxManage sharedfolder     add &lt;uuid|vmname&gt;
          <para><computeroutput>-readonly</computeroutput>
          Specifies that the share has only read-only access to files at the host path.</para>
 
-         <para>By default, shared folders have read/write access to the files at the host 
-         path. More specifically, on Linux distros - shared folders are mounted with 
-         770 io permissions with root user and vboxsf as the group, and using this option 
+         <para>By default, shared folders have read/write access to the files at the host
+         path. More specifically, on Linux distros - shared folders are mounted with
+         770 io permissions with root user and vboxsf as the group, and using this option
          the io permissions change to 700. Optional.</para>
        </listitem>
 
        <listitem>
          <para><computeroutput>-automount</computeroutput>
-         Specifies that the share will be automatically mounted. On Linux distros, this will 
+         Specifies that the share will be automatically mounted. On Linux distros, this will
          be to either /media/USER/sf_&lt;name&gt; or /media/sf_&lt;name&gt; - depending on
          your guest OS. Where &lt;name&gt; is the share name. Optional.</para>
        </listitem>
@@ -4181,20 +4182,20 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
     <para><itemizedlist>
        <listitem>
          <para><computeroutput>&lt;uuid|vmname&gt;</computeroutput>
-         Specifies the UUID or name of the VM whose guest operating system is 
+         Specifies the UUID or name of the VM whose guest operating system is
          sharing folders with the host computer. Mandatory.</para>
        </listitem>
 
        <listitem>
          <para><computeroutput>--name &lt;name&gt;</computeroutput>
-         Specifies the name of the share to be removed. Each share has a unique name within the 
+         Specifies the name of the share to be removed. Each share has a unique name within the
          namespace of the host operating system. Mandatory.</para>
        </listitem>
 
        <listitem>
          <para><computeroutput>-transient</computeroutput>
-         Specifies that the share is 'transient', meaning that it can be added 
-         and removed at runtime and does not persist after the VM has stopped.  
+         Specifies that the share is 'transient', meaning that it can be added
+         and removed at runtime and does not persist after the VM has stopped.
          Optional.</para>
        </listitem>
     </itemizedlist></para>
@@ -4338,7 +4339,7 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
            [--username &lt;name&gt; ]
            [--passwordfile &lt;file&gt; | --password &lt;password&gt;]
            [--domain &lt;domain&gt; ]
-           [-v|--verbose] [-q|quiet] 
+           [-v|--verbose] [-q|quiet]
     </screen>
 
     <para>Where details of the common options for the first set of subcommands are:
@@ -4350,7 +4351,7 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
               <para>Specifies the VM UUID or VM name. Mandatory.</para>
             </glossdef>
         </glossentry>
-   
+
         <glossentry>
           <glossterm><computeroutput>--username &lt;name&gt;</computeroutput></glossterm>
           <glossdef><para>Specifies the user name on guest OS under which the process should run. This
@@ -4360,8 +4361,8 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
 
         <glossentry>
           <glossterm><computeroutput>--passwordfile &lt;file&gt;|--password</computeroutput></glossterm>
-          <glossdef><para>Specifies the absolute path on guest file system of password file containing the 
-            password for the specified user account or password for the specified user account. Optional. 
+          <glossdef><para>Specifies the absolute path on guest file system of password file containing the
+            password for the specified user account or password for the specified user account. Optional.
             If both are omitted, empty password is assumed.</para></glossdef>
         </glossentry>
 
@@ -4385,7 +4386,7 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
     <para>The first set of subcommands: <itemizedlist>
         <listitem>
           <para><emphasis role="bold"><computeroutput>run</computeroutput></emphasis>
-          Executes a guest program - forwarding stdout, stderr and stdin to/from the host 
+          Executes a guest program - forwarding stdout, stderr and stdin to/from the host
           until it completes.</para>
           <screen>VBoxManage guestcontrol &lt;uuid|vmname&gt; run [common-options]
             --exe &lt;path to executable&gt; [--timeout &lt;msec&gt;]
@@ -4414,8 +4415,8 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
               <glossentry>
                 <glossterm><computeroutput>--timeout &lt;msec&gt;</computeroutput></glossterm>
                 <glossdef>
-                  <para>Specifies the maximum time (microseconds) that the executable can run, 
-                  during which VBoxManage receives its output. Optional. 
+                  <para>Specifies the maximum time (microseconds) that the executable can run,
+                  during which VBoxManage receives its output. Optional.
                   If unspecified, VBoxManage waits indefinitely for the process to end, or an error occurs.</para>
                 </glossdef>
               </glossentry>
@@ -4425,13 +4426,13 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
                 </computeroutput></glossterm>
                 <glossdef>
                   <para>Sets/modifies/unsets environment variable(s) in the environment in which the program will run. Optional.</para>
-                  <para>The guest process is created with the standard default guest OS environment. 
+                  <para>The guest process is created with the standard default guest OS environment.
                   Use this option to modify that default environment. To set/modify a variable use:
-                  <computeroutput>&lt;NAME&gt;=&lt;VALUE&gt;</computeroutput>. 
+                  <computeroutput>&lt;NAME&gt;=&lt;VALUE&gt;</computeroutput>.
                   To unset a variable use:
                   <computeroutput>&lt;NAME&gt;=</computeroutput></para>
                   <para>Any spaces in names/values should be enclosed by quotes. </para>
-                  <para>To set/modify/unset multiple variables, use multiple instances of the 
+                  <para>To set/modify/unset multiple variables, use multiple instances of the
                   <computeroutput>--E|--putenv</computeroutput> option. </para>
                 </glossdef>
               </glossentry>
@@ -4460,7 +4461,7 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
               <glossentry>
                 <glossterm><computeroutput>--no-wait-stdout|--wait-stdout</computeroutput></glossterm>
                 <glossdef>
-                  <para>Does not wait/waits until the guest process ends and receives its exit code and reason/flags. 
+                  <para>Does not wait/waits until the guest process ends and receives its exit code and reason/flags.
                   In the case of --wait-stdout -  while the process runs, VBoxManage receives its stdout. Optional.</para>
                 </glossdef>
               </glossentry>
@@ -4468,7 +4469,7 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
               <glossentry>
                 <glossterm><computeroutput>--no-wait-stderr|--wait-stderr</computeroutput></glossterm>
                 <glossdef>
-                  <para>Does not wait/waits until the guest process ends and receives its exit code and reason/flags. 
+                  <para>Does not wait/waits until the guest process ends and receives its exit code and reason/flags.
                   In case of --wait-stderr - while the process runs, VBoxManage receives its stderr. Optional.</para>
                 </glossdef>
               </glossentry>
@@ -4476,7 +4477,7 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
               <glossentry>
                 <glossterm><computeroutput>--dos2unix</computeroutput></glossterm>
                 <glossdef><para>
-                  Converts output from DOS/Windows guests to UNIX/Linux-compatible line endings 
+                  Converts output from DOS/Windows guests to UNIX/Linux-compatible line endings
                   (CR + LF &rarr; LF). Not yet implemented. Optional.</para>
                 </glossdef>
               </glossentry>
@@ -4649,7 +4650,7 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
 
         <listitem>
           <para><emphasis role="bold"><computeroutput>copyfrom</computeroutput></emphasis>
-          Copies files from the guest to the host file system. 
+          Copies files from the guest to the host file system.
           (Note - only with Guest Additions 4.0 or later installed).</para>
 
           <screen>VBoxManage guestcontrol &lt;uuid|vmname&gt; copyfrom [common-options]
@@ -4668,7 +4669,7 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
               <glossentry>
                 <glossterm><computeroutput>--dryrun</computeroutput></glossterm>
                 <glossdef>
-                  <para>Instructs VBoxManage to perform a dry run instead of an actual file copying 
+                  <para>Instructs VBoxManage to perform a dry run instead of an actual file copying
                   operation. Optional. </para>
                 </glossdef>
               </glossentry>
@@ -4711,7 +4712,7 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
 
         <listitem>
           <para><emphasis role="bold"><computeroutput>copyto</computeroutput></emphasis>
-          Copies files from the host to the guest file system. 
+          Copies files from the host to the guest file system.
           (Note - only with Guest Additions 4.0 or later installed).</para>
 
           <screen>VBoxManage guestcontrol &lt;uuid|vmname&gt; copyto [common-options]
@@ -4730,7 +4731,7 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
               <glossentry>
                 <glossterm><computeroutput>--dryrun</computeroutput></glossterm>
                 <glossdef>
-                  <para>Instructs VBoxManage to perform a dry run instead of an actual file copying 
+                  <para>Instructs VBoxManage to perform a dry run instead of an actual file copying
                   operation. Optional. </para>
                 </glossdef>
               </glossentry>
@@ -4773,7 +4774,7 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
 
         <listitem>
           <para><emphasis role="bold"><computeroutput>md|mkdir|createdir|createdirectory</computeroutput></emphasis>
-          Creates one or more directory(ies) on the guest file system. 
+          Creates one or more directory(ies) on the guest file system.
           (Note - only with Guest Additions 4.0 or later installed).</para>
 
           <screen>VBoxManage guestcontrol &lt;uuid|vmname&gt;  md|mkdir|createdir|createdirectory [common-options]
@@ -4790,10 +4791,10 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
               <glossentry>
                 <glossterm><computeroutput>--parents</computeroutput></glossterm>
                 <glossdef>
-                  <para>Creates any absent parent directory(ies) of the specified directory. Optional.</para> 
+                  <para>Creates any absent parent directory(ies) of the specified directory. Optional.</para>
                   <para>e.g. If specified directory is <computeroutput>D:\Foo\Bar</computeroutput>
-                  and <computeroutput>D:\Foo</computeroutput> is absent, it will    
-                  be created. In such a case, had the <computeroutput>--parents</computeroutput> 
+                  and <computeroutput>D:\Foo</computeroutput> is absent, it will
+                  be created. In such a case, had the <computeroutput>--parents</computeroutput>
                   option not been used, this command would have failed.</para>
                 </glossdef>
               </glossentry>
@@ -4801,9 +4802,9 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
               <glossentry>
                 <glossterm><computeroutput>--mode &lt;mode&gt;</computeroutput></glossterm>
                 <glossdef>
-                  <para>Specifies the permission mode on the specified directory(ies) (and any parents, 
+                  <para>Specifies the permission mode on the specified directory(ies) (and any parents,
                   where <computeroutput>--parents</computeroutput> option used).
-                  Currently octal modes (e.g. <computeroutput>0755</computeroutput>) only are 
+                  Currently octal modes (e.g. <computeroutput>0755</computeroutput>) only are
                   supported.</para>
                 </glossdef>
               </glossentry>
@@ -4812,13 +4813,13 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
                 <glossterm><computeroutput>&lt;guest-dir0&gt; [&lt;guest-dir1&gt; [...]]</computeroutput></glossterm>
                 <glossdef>
                   <para>Specifies list of absolute path(s) of directory(ies) to be created on
-                  guest file system. Mandatory. 
+                  guest file system. Mandatory.
                   e.g. <computeroutput>D:\Foo\Bar</computeroutput>.</para>
                   <para>All parent directories must already exist
-                  unless switch <computeroutput>--parents</computeroutput> used. 
-                  (e.g. in the above example <computeroutput>D:\Foo</computeroutput>). 
+                  unless switch <computeroutput>--parents</computeroutput> used.
+                  (e.g. in the above example <computeroutput>D:\Foo</computeroutput>).
                   The specified user must have sufficient rights to create the
-                  specified directory(ies), and any parents that need 
+                  specified directory(ies), and any parents that need
                   to be created.</para>
                 </glossdef>
               </glossentry>
@@ -4833,7 +4834,7 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
           <screen>VBoxManage guestcontrol &lt;uuid|vmname&gt; rmdir|removedir|removedirectory [common-options]
            [--recursive|-R]
             &lt;guest-dir0&gt; [&lt;guest-dir1&gt; [...]]
-          </screen>   
+          </screen>
 
           <para>Where the parameters are: <glosslist>
               <glossentry>
@@ -4854,7 +4855,7 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
                 <glossterm><computeroutput>&lt;guest-dir0&gt; [&lt;guest-dir1&gt; [...]]</computeroutput></glossterm>
                 <glossdef>
                   <para>Specifies list of the absolute path(s) of directory(ies) to be deleted on
-                  guest file system. Mandatory. Wildcards are allowed. e.g. <computeroutput>D:\Foo\*Bar</computeroutput>.  
+                  guest file system. Mandatory. Wildcards are allowed. e.g. <computeroutput>D:\Foo\*Bar</computeroutput>.
                   The specified user must have sufficient rights to delete the
                   specified directory(ies).</para>
                 </glossdef>
@@ -4890,7 +4891,7 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
                 <glossterm><computeroutput>&lt;guest-file0&gt; [&lt;guest-file1&gt; [...]]</computeroutput></glossterm>
                 <glossdef>
                   <para>Specifies list of absolute path(s) of file(s) to be deleted on guest file system. Mandatory.
-                   Wildcards are allowed. e.g. <computeroutput>D:\Foo\Bar\text*.txt</computeroutput>.  
+                   Wildcards are allowed. e.g. <computeroutput>D:\Foo\Bar\text*.txt</computeroutput>.
                    The specified user should have sufficient rights to delete the specified file(s).</para>
                 </glossdef>
               </glossentry>
@@ -4917,9 +4918,9 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
               <glossentry>
                 <glossterm><computeroutput>&lt;guest-source0&gt; [&lt;guest-source1&gt; [...]]</computeroutput></glossterm>
                 <glossdef>
-                  <para>Specifies absolute path(s) of file(s) and/or single directory to be moved/renamed on guest 
+                  <para>Specifies absolute path(s) of file(s) and/or single directory to be moved/renamed on guest
                   file system. Mandatory.
-                  Wildcards are allowed in file names(s). The specified user should have sufficient rights to 
+                  Wildcards are allowed in file names(s). The specified user should have sufficient rights to
                   access the specified file(s).</para>
                 </glossdef>
               </glossentry>
@@ -4928,7 +4929,7 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
                 <glossterm><computeroutput>&lt;dest&gt;</computeroutput></glossterm>
                 <glossdef>
                   <para>Specifies the absolute path of the destination file/directory to which the file(s)
-                  are to be moved. Mandatory. If only one file to be moved, &lt;dest&gt; can be file or directory, 
+                  are to be moved. Mandatory. If only one file to be moved, &lt;dest&gt; can be file or directory,
                   else it must be a directory.
                   The specified user must have sufficient rights to access the destination file/directory.</para>
                 </glossdef>
@@ -4939,13 +4940,13 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
         <listitem>
           <para><emphasis role="bold"><computeroutput>mktemp|createtemp|createtemporary</computeroutput></emphasis>
           Creates a temporary file/directory on the guest file system, to assist subsequent
-          copying of files from the host to the guest file systems. By default, the file/directory 
+          copying of files from the host to the guest file systems. By default, the file/directory
           is created in the guest's platform specific temp directory. Not currently supported.
           (Only with installed Guest Additions 4.2 and later).</para>
 
             <screen>VBoxManage guestcontrol &lt;uuid|vmname&gt; mktemp|createtemp|createtemporary [common-options]
            [--directory] [--secure] [--mode &lt;mode&gt;] [--tmpdir &lt;directory&gt;]
-            &lt;template&gt; 
+            &lt;template&gt;
             </screen>
 
           <para>The parameters are: <glosslist>
@@ -4968,7 +4969,7 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
                 <glossdef>
                   <para>
                   Enforces secure file/directory creation. Optional. The permission mode is set to
-                  <computeroutput>0755</computeroutput>. Operation fails if it cannot be performed securely. 
+                  <computeroutput>0755</computeroutput>. Operation fails if it cannot be performed securely.
                   </para>
                 </glossdef>
               </glossentry>
@@ -4976,8 +4977,8 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
               <glossentry>
                 <glossterm><computeroutput>--mode &lt;mode&gt;</computeroutput></glossterm>
                 <glossdef>
-                  <para>Specifies the permission mode of the specified directory. Optional. 
-                  Currently only octal modes (e.g. <computeroutput>0755</computeroutput>) 
+                  <para>Specifies the permission mode of the specified directory. Optional.
+                  Currently only octal modes (e.g. <computeroutput>0755</computeroutput>)
                   are supported.</para>
                 </glossdef>
               </glossentry>
@@ -4986,9 +4987,9 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
                 <glossterm><computeroutput>--tmpdir &lt;directory&gt;</computeroutput></glossterm>
                 <glossdef>
                   <para>
-                  Specifies the absolute path of the directory on the guest file system into which the 
+                  Specifies the absolute path of the directory on the guest file system into which the
                   file/directory specified in will be created. Optional.
-                  If unspecified, the platform-specific temp directory is used. 
+                  If unspecified, the platform-specific temp directory is used.
                   </para>
                 </glossdef>
               </glossentry>
@@ -4996,8 +4997,8 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
               <glossentry>
                 <glossterm><computeroutput>&lt;template&gt;</computeroutput></glossterm>
                 <glossdef>
-                  <para>Specifies a file name without a directory path, containing at least one sequence comprising 
-                   three consecutive 'X' characters, or ending in 'X'. Mandatory. 
+                  <para>Specifies a file name without a directory path, containing at least one sequence comprising
+                   three consecutive 'X' characters, or ending in 'X'. Mandatory.
                   </para>
                 </glossdef>
               </glossentry>
@@ -5040,7 +5041,7 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
 
     <para>The "common-options" are:</para>
     <screen>
-            [-v|--verbose] [-q|--quiet] 
+            [-v|--verbose] [-q|--quiet]
     </screen>
 
     <para>Where details of the common options for the second set of subcommands are:
@@ -5113,7 +5114,7 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
             <glossentry>
               <glossterm><computeroutput>--session-name &lt;name or pattern&gt;</computeroutput></glossterm>
               <glossdef>
-                <para>Specifies the guest session by its name, or multiple sessions 
+                <para>Specifies the guest session by its name, or multiple sessions
                 using a pattern containing wildcards. Optional.</para>
               </glossdef>
             </glossentry>
@@ -5169,12 +5170,12 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
 
         <listitem>
           <para><emphasis role="bold"><computeroutput>updatega|updateadditions|updateguestadditions</computeroutput></emphasis>
-          Ugrades Guest Additions already installed on the guest. 
+          Ugrades Guest Additions already installed on the guest.
           (Only already installed Guest Additions 4.0 and later).</para>
 
           <screen>VBoxManage guestcontrol &lt;uuid|vmname&gt; updatega|updateadditions|updateguestadditions [common-options]
            [--source &lt;New .ISO path&gt;]
-           [--wait-start] 
+           [--wait-start]
            [-- &lt;argument0&gt; [&lt;argument1&gt; [...]]]</screen>
 
           <para>Where the parameters are: <glosslist>
@@ -5195,10 +5196,10 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
               <glossentry>
                 <glossterm><computeroutput>--wait-start</computeroutput></glossterm>
                 <glossdef>
-                  <para>Indicates that VBoxManage starts the usual updating process on the guest and then waits 
+                  <para>Indicates that VBoxManage starts the usual updating process on the guest and then waits
                    until the actual Guest Additions updating begins, at which point VBoxManage self-terminates. Optional.</para>
-                  <para>Default behavior is that VBoxManage waits for completion of the Guest Additions update before 
-                   terminating. Use of this option is sometimes necessary, as a running VBoxManage 
+                  <para>Default behavior is that VBoxManage waits for completion of the Guest Additions update before
+                   terminating. Use of this option is sometimes necessary, as a running VBoxManage
                    can affect the interaction between the installer and the guest OS.</para>
                 </glossdef>
               </glossentry>
@@ -5390,20 +5391,20 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
   <sect1 id="vboxmanage-natnetwork">
     <title>VBoxManage natnetwork</title>
 
-    <para>NAT networks use the Network Address Translation (NAT) service - which works in a 
+    <para>NAT networks use the Network Address Translation (NAT) service - which works in a
     similar way to a home router. It groups systems using it into a network and prevents
-    outside systems from directly accessing those inside, while letting systems inside communicate 
+    outside systems from directly accessing those inside, while letting systems inside communicate
     with each other and outside systems using TCP and UDP over IPv4 and IPv6.</para>
 
-    <para>A NAT service is attached to an internal network. Virtual machines to make use of one 
-    should be attached to it. The name of an internal network is chosen when the NAT service is 
-    created, and the internal network will be created if it does not already exist. 
+    <para>A NAT service is attached to an internal network. Virtual machines to make use of one
+    should be attached to it. The name of an internal network is chosen when the NAT service is
+    created, and the internal network will be created if it does not already exist.
     An example command to create a NAT network:</para>
 
     <screen>VBoxManage natnetwork add --netname natnet1 --network "192.168.15.0/24" --enable</screen>
 
     <para>Here, "natnet1" is the name of the internal network to be used and "192.168.15.0/24" is the
-    network address and mask of the NAT service interface. By default, in this static configuration 
+    network address and mask of the NAT service interface. By default, in this static configuration
     - the gateway will be assigned the address 192.168.15.1 (the address after the interface address),
     though this is subject to change.</para>
 
@@ -5422,11 +5423,11 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
                          [--ipv6 on|off]
                          [--port-forward-6 &lt;rule&gt;]
                          [--loopback-6 &lt;rule&gt;]
-    </screen> 
+    </screen>
 
 
-    <para><emphasis role="bold"><computeroutput>VBoxManage natnetwork add</computeroutput></emphasis> 
-    Creates a new internal network interface, and adds a NAT network service. This command is a 
+    <para><emphasis role="bold"><computeroutput>VBoxManage natnetwork add</computeroutput></emphasis>
+    Creates a new internal network interface, and adds a NAT network service. This command is a
     prerequisite for enabling attachment of VMs to the NAT network. Parameters:</para>
 
     <para>
@@ -5440,7 +5441,7 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
         <glossentry>
           <glossterm><computeroutput>--network &lt;network&gt;</computeroutput></glossterm>
           <glossdef>
-            <para>Where &lt;network&gt; specifies the static(default)/DHCP network address and mask of 
+            <para>Where &lt;network&gt; specifies the static(default)/DHCP network address and mask of
             the NAT service interface.</para>
           </glossdef>
         </glossentry>
@@ -5453,7 +5454,7 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
         <glossentry>
           <glossterm><computeroutput>--dhcp on|off</computeroutput></glossterm>
           <glossdef>
-            <para>Enables/disables DHCP server specified by --netname; its use also indicates that it 
+            <para>Enables/disables DHCP server specified by --netname; its use also indicates that it
             is a DHCP server.</para>
           </glossdef>
         </glossentry>
@@ -5488,7 +5489,7 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
           </glossdef>
         </glossentry>
       </glosslist>
-    </para> 
+    </para>
 
     <screen>VBoxManage natnetwork remove --netname &lt;name&gt; </screen>
 
@@ -5505,7 +5506,7 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
           </glossdef>
         </glossentry>
       </glosslist>
-    </para> 
+    </para>
 
     <screen>VBoxManage natnetwork modify --netname &lt;name&gt;
                             [--network &lt;network&gt;]
@@ -5518,7 +5519,7 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
                             [--loopback-6 &lt;rule&gt;]
     </screen>
 
-    <para><emphasis role="bold"><computeroutput>VBoxManage natnetwork modify</computeroutput></emphasis> 
+    <para><emphasis role="bold"><computeroutput>VBoxManage natnetwork modify</computeroutput></emphasis>
     Modifies an existing NAT network service, parameters:</para>
 
     <para>
@@ -5532,7 +5533,7 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
         <glossentry>
           <glossterm><computeroutput>--network &lt;network&gt;</computeroutput></glossterm>
           <glossdef>
-            <para>Where &lt;network&gt; specifies the new static(default)/DHCP network address and mask 
+            <para>Where &lt;network&gt; specifies the new static(default)/DHCP network address and mask
             of the NAT service interface.</para>
           </glossdef>
         </glossentry>
@@ -5579,12 +5580,12 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
           </glossdef>
         </glossentry>
       </glosslist>
-    </para> 
+    </para>
 
     <screen>VBoxManage natnetwork start --netname &lt;name&gt;
     </screen>
 
-    <para><emphasis  role="bold"><computeroutput>VBoxManage natnetwork start</computeroutput></emphasis> 
+    <para><emphasis  role="bold"><computeroutput>VBoxManage natnetwork start</computeroutput></emphasis>
     Starts specified NAT network service and any associated DHCP server, parameters:</para>
 
     <para>
@@ -5601,7 +5602,7 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
     <screen>VBoxManage natnetwork stop --netname &lt;name&gt;
     </screen>
 
-    <para><emphasis  role="bold"><computeroutput>VBoxManage natnetwork stop</computeroutput></emphasis> 
+    <para><emphasis  role="bold"><computeroutput>VBoxManage natnetwork stop</computeroutput></emphasis>
     Stops specified NAT network service and any DHCP server, parameters:</para>
 
     <para>
@@ -5617,7 +5618,7 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
 
     <screen>VBoxManage natnetwork list [&lt;pattern&gt;] </screen>
 
-    <para><emphasis  role="bold"><computeroutput>VBoxManage natnetwork list</computeroutput></emphasis> 
+    <para><emphasis  role="bold"><computeroutput>VBoxManage natnetwork list</computeroutput></emphasis>
     Lists all NAT network services with optional filtering, parameters:</para>
 
     <para>
@@ -5743,14 +5744,14 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
     <para>To modify the settings of a DHCP server created earlier with
     <computeroutput>VBoxManage dhcpserver add</computeroutput>, you can use
     <computeroutput>VBoxManage dhcpserver modify</computeroutput> for a given
-    network or host-only interface name. This has the same parameters as 
+    network or host-only interface name. This has the same parameters as
     <computeroutput>VBoxManage dhcpserver add</computeroutput>.</para>
   </sect1>
 
   <sect1 id="vboxmanage-usbdevsource">
     <title>VBoxManage usbdevsource</title>
 
-    <para>The "usbdevsource" commands enables you to add and remove USB devices 
+    <para>The "usbdevsource" commands enables you to add and remove USB devices
     globally.</para>
 
     <para>The following command adds a USB device.</para>
@@ -5762,15 +5763,15 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
 
     <para>Where the command line options are:<itemizedlist>
         <listitem>
-          <para>&lt;source name&gt; specifies the ID of the 'source' USB 
+          <para>&lt;source name&gt; specifies the ID of the 'source' USB
           device to be added. Mandatory.</para>
         </listitem>
         <listitem>
-          <para>--backend &lt;backend&gt; specifies the USB proxy service 
+          <para>--backend &lt;backend&gt; specifies the USB proxy service
           backend to use. Mandatory.</para>
         </listitem>
         <listitem>
-          <para>--address &lt;address&gt; specifies the backend specific 
+          <para>--address &lt;address&gt; specifies the backend specific
           address. Mandatory.</para>
         </listitem>
       </itemizedlist></para>
@@ -5782,7 +5783,7 @@ VBoxManage sharedfolder     remove &lt;uuid|vmname&gt;
 
     <para>Where the command line options are:<itemizedlist>
         <listitem>
-          <para>&lt;source name&gt; specifies the ID of the 'source' USB 
+          <para>&lt;source name&gt; specifies the ID of the 'source' USB
           device to be removed. Mandatory.</para>
         </listitem>
       </itemizedlist></para>
