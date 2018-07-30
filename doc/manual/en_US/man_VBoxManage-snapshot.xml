@@ -113,6 +113,8 @@
       <arg choice="plain">showvminfo</arg>
 
       <arg choice="req"><replaceable>snapshot-name</replaceable></arg>
+
+      <group choice="opt"><arg choice="opt">--details</arg><arg choice="opt">--machinereadable</arg></group>
     </cmdsynopsis>
   </refsynopsisdiv>
 
