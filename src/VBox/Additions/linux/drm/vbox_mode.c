@@ -369,7 +369,12 @@ static struct drm_encoder *vbox_best_single_encoder(struct drm_connector *connec
     LogFunc(("vboxvideo: %d: connector=%p\n", __LINE__, connector));
     /* pick the encoder ids */
     if (enc_id)
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 15, 0)
+        return drm_encoder_find(connector->dev, NULL, enc_id);
+#else
         return drm_encoder_find(connector->dev, enc_id);
+#endif
+
     LogFunc(("vboxvideo: %d\n", __LINE__));
     return NULL;
 }
