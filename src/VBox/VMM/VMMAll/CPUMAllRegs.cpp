@@ -1031,6 +1031,11 @@ VMMDECL(uint32_t) CPUMGetGuestESI(PVMCPU pVCpu)
     return pVCpu->cpum.s.Guest.esi;
 }
 
+VMMDECL(uint64_t) CPUMGetGuestRSI(PVMCPU pVCpu)
+{
+    return pVCpu->cpum.s.Guest.rsi;
+}
+
 
 VMMDECL(uint32_t) CPUMGetGuestEDI(PVMCPU pVCpu)
 {
@@ -1041,6 +1046,11 @@ VMMDECL(uint32_t) CPUMGetGuestEDI(PVMCPU pVCpu)
 VMMDECL(uint32_t) CPUMGetGuestESP(PVMCPU pVCpu)
 {
     return pVCpu->cpum.s.Guest.esp;
+}
+
+VMMDECL(uint64_t) CPUMGetGuestRSP(PVMCPU pVCpu)
+{
+    return pVCpu->cpum.s.Guest.rsp;
 }
 
 

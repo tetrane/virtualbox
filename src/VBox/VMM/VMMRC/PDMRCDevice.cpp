@@ -28,6 +28,7 @@
 #include <VBox/vmm/vm.h>
 #include <VBox/vmm/vmm.h>
 #include <VBox/vmm/patm.h>
+#include <VBox/vmm/tetrane.h>
 
 #include <VBox/log.h>
 #include <VBox/err.h>
@@ -113,6 +114,11 @@ static DECLCALLBACK(int) pdmRCDevHlp_PCIPhysWrite(PPDMDEVINS pDevIns, PPDMPCIDEV
         return VERR_PDM_NOT_PCI_BUS_MASTER;
     }
 #endif
+    PVM pVM = pDevIns->Internal.s.pVMRC;
+    PVMCPU pVCpu = VMMGetCpu(pVM);
+    VBOXSTRICTRC rc = save_pci_access(pVM, pVCpu, pDevIns, GCPhys, cbWrite, (const uint8_t*)pvBuf, true);
+    if (RT_FAILURE(rc))
+        return VBOXSTRICTRC_VAL(rc);
 
     return pDevIns->pHlpRC->pfnPhysWrite(pDevIns, GCPhys, pvBuf, cbWrite);
 }
@@ -216,6 +222,11 @@ static DECLCALLBACK(int) pdmRCDevHlp_PhysRead(PPDMDEVINS pDevIns, RTGCPHYS GCPhy
     VBOXSTRICTRC rcStrict = PGMPhysRead(pDevIns->Internal.s.pVMRC, GCPhys, pvBuf, cbRead, PGMACCESSORIGIN_DEVICE);
     AssertMsg(rcStrict == VINF_SUCCESS, ("%Rrc\n", VBOXSTRICTRC_VAL(rcStrict))); /** @todo track down the users for this bugger. */
 
+    PVM          pVM     = pDevIns->Internal.s.pVMRC;
+    VBOXSTRICTRC rc = save_pci_access(pVM, VMMGetCpu(pVM), pDevIns, GCPhys, cbRead, (const uint8_t*)pvBuf, false);
+    if (RT_FAILURE(rc))
+        return VBOXSTRICTRC_VAL(rc);
+
     Log(("pdmRCDevHlp_PhysRead: caller=%p/%d: returns %Rrc\n", pDevIns, pDevIns->iInstance, VBOXSTRICTRC_VAL(rcStrict) ));
     return VBOXSTRICTRC_VAL(rcStrict);
 }
@@ -230,6 +241,11 @@ static DECLCALLBACK(int) pdmRCDevHlp_PhysWrite(PPDMDEVINS pDevIns, RTGCPHYS GCPh
 
     VBOXSTRICTRC rcStrict = PGMPhysWrite(pDevIns->Internal.s.pVMRC, GCPhys, pvBuf, cbWrite, PGMACCESSORIGIN_DEVICE);
     AssertMsg(rcStrict == VINF_SUCCESS, ("%Rrc\n", VBOXSTRICTRC_VAL(rcStrict))); /** @todo track down the users for this bugger. */
+
+    PVM          pVM     = pDevIns->Internal.s.pVMRC;
+    VBOXSTRICTRC rc = save_pci_access(pVM, VMMGetCpu(pVM), pDevIns, GCPhys, cbWrite, (const uint8_t*)pvBuf, true);
+    if (RT_FAILURE(rc))
+        return VBOXSTRICTRC_VAL(rc);
 
     Log(("pdmRCDevHlp_PhysWrite: caller=%p/%d: returns %Rrc\n", pDevIns, pDevIns->iInstance, VBOXSTRICTRC_VAL(rcStrict) ));
     return VBOXSTRICTRC_VAL(rcStrict);
@@ -994,4 +1010,3 @@ static bool pdmRCIsaSetIrq(PVM pVM, int iIrq, int iLevel, uint32_t uTagSrc)
     PDMQueueInsertEx(pVM->pdm.s.pDevHlpQueueRC, &pTask->Core, 0);
     return false;
 }
-

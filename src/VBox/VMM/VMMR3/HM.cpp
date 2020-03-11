@@ -67,6 +67,7 @@
 #include <iprt/env.h>
 #include <iprt/thread.h>
 
+#include <VBox/vmm/tetrane.h>
 
 /*********************************************************************************************************************************
 *   Global Variables                                                                                                             *
@@ -742,11 +743,14 @@ static int hmR3InitCPU(PVM pVM)
     if (!HMIsEnabled(pVM))
         return VINF_SUCCESS;
 
+
+
     for (VMCPUID i = 0; i < pVM->cCpus; i++)
     {
         PVMCPU pVCpu = &pVM->aCpus[i];
         pVCpu->hm.s.fActive = false;
     }
+    tetrane_init_tweaks(pVM);
 
 #ifdef VBOX_WITH_STATISTICS
     STAM_REG(pVM, &pVM->hm.s.StatTprPatchSuccess,   STAMTYPE_COUNTER, "/HM/TPR/Patch/Success",  STAMUNIT_OCCURENCES, "Number of times an instruction was successfully patched.");

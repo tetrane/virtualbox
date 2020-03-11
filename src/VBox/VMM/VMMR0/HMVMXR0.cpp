@@ -15,6 +15,7 @@
  * hope that it will be useful, but WITHOUT ANY WARRANTY of any kind.
  */
 
+#define HMVMX_ALWAYS_TRAP_ALL_XCPTS
 
 /*********************************************************************************************************************************
 *   Header Files                                                                                                                 *
@@ -41,6 +42,8 @@
 #include <VBox/vmm/vm.h>
 #include "HMVMXR0.h"
 #include "dtrace/VBoxVMM.h"
+
+#include <VBox/vmm/tetrane.h>
 
 #ifdef DEBUG_ramshankar
 # define HMVMX_ALWAYS_SAVE_GUEST_RFLAGS
@@ -1003,6 +1006,8 @@ static int hmR0VmxStructsAlloc(PVM pVM)
     {
         PVMCPU pVCpu = &pVM->aCpus[i];
         AssertPtr(pVCpu);
+
+        memset(&pVCpu->reven, 0, sizeof(pVCpu->reven));
 
         /* Allocate the VM control structure (VMCS). */
         rc = hmR0VmxPageAllocZ(&pVCpu->hm.s.vmx.hMemObjVmcs, &pVCpu->hm.s.vmx.pvVmcs, &pVCpu->hm.s.vmx.HCPhysVmcs);
@@ -5702,6 +5707,11 @@ static void hmR0VmxUpdateTscOffsettingAndPreemptTimer(PVM pVM, PVMCPU pVCpu)
         uint64_t u64CpuHz  = SUPGetCpuHzFromGipBySetIndex(g_pSUPGlobalInfoPage, pVCpu->iHostCpuSet);
         cTicksToDeadline   = RT_MIN(cTicksToDeadline, u64CpuHz / 64);      /* 1/64th of a second */
         cTicksToDeadline   = RT_MAX(cTicksToDeadline, u64CpuHz / 2048);    /* 1/2048th of a second */
+
+        uint32_t preempt_timer_value = ASMAtomicReadU32(&pVCpu->reven.preempt_timer_value);
+        if (preempt_timer_value != 0)
+          cTicksToDeadline = preempt_timer_value;
+
         cTicksToDeadline >>= pVM->hm.s.vmx.cPreemptTimerShift;
 
         uint32_t cPreemptionTickCount = (uint32_t)RT_MIN(cTicksToDeadline, UINT32_MAX - 16);
@@ -5723,7 +5733,8 @@ static void hmR0VmxUpdateTscOffsettingAndPreemptTimer(PVM pVM, PVMCPU pVCpu)
         STAM_COUNTER_INC(&pVCpu->hm.s.StatTscParavirt);
     }
 
-    if (fOffsettedTsc && RT_LIKELY(!pVCpu->hm.s.fDebugWantRdTscExit))
+    // Tetrane: We always want to VMEXIT on RDTSC
+    if (0 && fOffsettedTsc && RT_LIKELY(!pVCpu->hm.s.fDebugWantRdTscExit))
     {
         /* Note: VMX_VMCS_CTRL_PROC_EXEC_RDTSC_EXIT takes precedence over TSC_OFFSET, applies to RDTSCP too. */
         rc = VMXWriteVmcs64(VMX_VMCS64_CTRL_TSC_OFFSET_FULL, pVCpu->hm.s.vmx.u64TSCOffset);     AssertRC(rc);
@@ -5789,6 +5800,9 @@ DECLINLINE(void) hmR0VmxSetPendingEvent(PVMCPU pVCpu, uint32_t u32IntInfo, uint3
                                         RTGCUINTPTR GCPtrFaultAddress)
 {
     Assert(!pVCpu->hm.s.Event.fPending);
+
+    save_irq(NULL, pVCpu, CPUMQueryGuestCtxPtr(pVCpu), u32IntInfo, u32ErrCode);
+
     pVCpu->hm.s.Event.fPending          = true;
     pVCpu->hm.s.Event.u64IntInfo        = u32IntInfo;
     pVCpu->hm.s.Event.u32ErrCode        = u32ErrCode;
@@ -6907,6 +6921,15 @@ static VBOXSTRICTRC hmR0VmxCheckForceFlags(PVM pVM, PVMCPU pVCpu, PCPUMCTX pMixe
 {
     Assert(VMMRZCallRing3IsEnabled(pVCpu));
 
+    VBOXSTRICTRC success_return_value = VINF_SUCCESS;
+
+    if (is_sync_point_full(pVM, pVCpu)) {
+      // Make sure we respect original VBox return value as much as possible. We assume other than VINF_SUCCESS
+      // always force a return to ring3. Hence, we just override success with a force return to ring3 if it's necessary
+      // in our case. Hopefully this will be future-proof.
+      success_return_value = VINF_EM_RAW_TO_R3;
+    }
+
     /*
      * Anything pending?  Should be more likely than not if we're doing a good job.
      */
@@ -6915,7 +6938,7 @@ static VBOXSTRICTRC hmR0VmxCheckForceFlags(PVM pVM, PVMCPU pVCpu, PCPUMCTX pMixe
           && !VMCPU_FF_IS_PENDING(pVCpu, VMCPU_FF_HP_R0_PRE_HM_MASK)
         :    !VM_FF_IS_PENDING(pVM, VM_FF_HP_R0_PRE_HM_STEP_MASK)
           && !VMCPU_FF_IS_PENDING(pVCpu, VMCPU_FF_HP_R0_PRE_HM_STEP_MASK) )
-        return VINF_SUCCESS;
+        return success_return_value;
 
     /* We need the control registers now, make sure the guest-CPU context is updated. */
     int rc3 = hmR0VmxSaveGuestControlRegs(pVCpu, pMixedCtx);
@@ -6982,7 +7005,7 @@ static VBOXSTRICTRC hmR0VmxCheckForceFlags(PVM pVM, PVMCPU pVCpu, PCPUMCTX pMixe
         return VINF_EM_RAW_TO_R3;
     }
 
-    return VINF_SUCCESS;
+    return success_return_value;
 }
 
 
@@ -9039,6 +9062,7 @@ static VBOXSTRICTRC hmR0VmxRunGuestCodeNormal(PVM pVM, PVMCPU pVCpu, PCPUMCTX pC
     VmxTransient.fUpdateTscOffsettingAndPreemptTimer = true;
     VBOXSTRICTRC rcStrict = VERR_INTERNAL_ERROR_5;
     uint32_t     cLoops = 0;
+    uint32_t     preempt_timer_value = ASMAtomicReadU32(&pVCpu->reven.preempt_timer_value);
 
     for (;; cLoops++)
     {
@@ -9052,13 +9076,41 @@ static VBOXSTRICTRC hmR0VmxRunGuestCodeNormal(PVM pVM, PVMCPU pVCpu, PCPUMCTX pC
         if (rcStrict != VINF_SUCCESS)
             break;
 
+        uint32_t new_preempt_timer_value = ASMAtomicReadU32(&pVCpu->reven.preempt_timer_value);
+        if (new_preempt_timer_value != preempt_timer_value)
+        {
+            preempt_timer_value = new_preempt_timer_value;
+            VmxTransient.fUpdateTscOffsettingAndPreemptTimer = true;
+        }
+
         hmR0VmxPreRunGuestCommitted(pVM, pVCpu, pCtx, &VmxTransient);
+
+        hmR0VmxSaveGuestState(pVCpu, pCtx);
+        save_sync_point(pVM, pVCpu, pCtx, -1);
+
         int rcRun = hmR0VmxRunGuest(pVM, pVCpu, pCtx);
         /* The guest-CPU context is now outdated, 'pCtx' is to be treated as 'pMixedCtx' from this point on!!! */
 
         /* Restore any residual host-state and save any bits shared between host
            and guest into the guest-CPU state.  Re-enables interrupts! */
         hmR0VmxPostRunGuest(pVM, pVCpu, pCtx, &VmxTransient, rcRun);
+
+
+        /* Tetrane patch to update the guest FPU state whenever possible */
+        hmR0VmxSaveGuestState(pVCpu, pCtx);
+
+        RTTHREADPREEMPTSTATE PreemptState = RTTHREADPREEMPTSTATE_INITIALIZER;
+        RTThreadPreemptDisable(&PreemptState);
+        if (CPUMR0FpuStateMaybeSaveGuestAndRestoreHost(pVCpu))
+        {
+          /* Saving the state somehow discards information in the tag word, so restore it. */
+          CPUMR0LoadGuestFPU(pVM, pVCpu);
+          Assert(CPUMIsGuestFPUStateActive(pVCpu));
+        }
+        RTThreadPreemptRestore(&PreemptState);
+
+        Assert(CPUMQueryGuestCtxPtr(pVCpu) == pCtx);
+        save_sync_point(pVM, pVCpu, pCtx, VmxTransient.uExitReason);
 
         /* Check for errors with running the VM (VMLAUNCH/VMRESUME). */
         if (RT_SUCCESS(rcRun))
@@ -10146,6 +10198,7 @@ static VBOXSTRICTRC hmR0VmxRunGuestCodeDebug(PVM pVM, PVMCPU pVCpu, PCPUMCTX pCt
 {
     VMXTRANSIENT VmxTransient;
     VmxTransient.fUpdateTscOffsettingAndPreemptTimer = true;
+    uint32_t     preempt_timer_value = ASMAtomicReadU32(&pVCpu->reven.preempt_timer_value);
 
     /* Set HMCPU indicators.  */
     bool const fSavedSingleInstruction  = pVCpu->hm.s.fSingleInstruction;
@@ -10177,6 +10230,13 @@ static VBOXSTRICTRC hmR0VmxRunGuestCodeDebug(PVM pVM, PVMCPU pVCpu, PCPUMCTX pCt
         rcStrict = hmR0VmxPreRunGuest(pVM, pVCpu, pCtx, &VmxTransient, fStepping);
         if (rcStrict != VINF_SUCCESS)
             break;
+
+        uint32_t new_preempt_timer_value = ASMAtomicReadU32(&pVCpu->reven.preempt_timer_value);
+        if (new_preempt_timer_value != preempt_timer_value)
+        {
+            preempt_timer_value = new_preempt_timer_value;
+            VmxTransient.fUpdateTscOffsettingAndPreemptTimer = true;
+        }
 
         hmR0VmxPreRunGuestCommitted(pVM, pVCpu, pCtx, &VmxTransient);
         hmR0VmxPreRunGuestDebugStateApply(pVCpu, &DbgState); /* Override any obnoxious code in the above two calls. */
@@ -11421,6 +11481,9 @@ HMVMX_EXIT_NSRC_DECL hmR0VmxExitIntWindow(PVMCPU pVCpu, PCPUMCTX pMixedCtx, PVMX
 
     /* Deliver the pending interrupts via hmR0VmxEvaluatePendingEvent() and resume guest execution. */
     STAM_COUNTER_INC(&pVCpu->hm.s.StatExitIntWindow);
+
+    return VINF_EM_RAW_INTERRUPT;
+
     return VINF_SUCCESS;
 }
 

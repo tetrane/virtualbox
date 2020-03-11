@@ -69,6 +69,8 @@
 
 #include "../../Runtime/include/internal/ldrELF64.h"
 
+#include <VBox/vmm/tetrane_structs.h>
+
 
 /*********************************************************************************************************************************
 *   Defined Constants And Macros                                                                                                 *
@@ -423,7 +425,8 @@ static int dbgfR3CoreWriteWorker(PVM pVM, RTFILE hFile)
     uint64_t const offCoreDescriptor  = offLoadSections   + cbLoadSections;
     uint64_t const cbCoreDescriptor   = Elf64NoteSectionSize(g_pcszCoreVBoxCore, sizeof(CoreDescriptor));
     uint64_t const offCpuDumps        = offCoreDescriptor + cbCoreDescriptor;
-    uint64_t const cbCpuDumps         = pVM->cCpus * Elf64NoteSectionSize(g_pcszCoreVBoxCpu, sizeof(DBGFCORECPU));
+    uint64_t const cbCpuDumps         = pVM->cCpus * Elf64NoteSectionSize(g_pcszCoreVBoxCpu, sizeof(DBGFCORECPU))
+                                        + pVM->cCpus * Elf64NoteSectionSize(g_pcszCoreVBoxCpu, TETRANE_CPU_SECTION_SIZE);
     uint64_t const offMemory          = offCpuDumps       + cbCpuDumps;
 
     uint64_t const offNoteSectionData = offCoreDescriptor;
@@ -537,6 +540,34 @@ static int dbgfR3CoreWriteWorker(PVM pVM, RTFILE hFile)
     }
     RTMemFree(pDbgfCoreCpu);
     pDbgfCoreCpu = NULL;
+
+    /*
+     * Write TETRANE data per CPU
+     */
+    uint64_t* tetraneData = (uint64_t*)RTMemAlloc(TETRANE_CPU_SECTION_SIZE);
+    for (uint32_t iCpu = 0; iCpu < pVM->cCpus; iCpu++)
+    {
+        RT_BZERO(tetraneData, TETRANE_CPU_SECTION_SIZE);
+
+        PVMCPU      pVCpu = &pVM->aCpus[iCpu];
+
+        tetraneData[0] = TETRANE_CPU_SECTION_MAGIC;
+        tetraneData[1] = TETRANE_CPU_SECTION_SIZE;
+
+        struct tetrane_cpu_info *cpu_infos = reinterpret_cast<struct tetrane_cpu_info *>(tetraneData + 2);
+
+        cpu_infos->cr8 = CPUMGetGuestCR8(pVCpu);
+
+        rc = Elf64WriteNoteHdr(hFile, TETRANE_CPU_SECTION_NOTE_TYPE, g_pcszCoreVBoxCpu, tetraneData, TETRANE_CPU_SECTION_SIZE);
+        if (RT_FAILURE(rc))
+        {
+            LogRel((DBGFLOG_NAME ": Elf64WriteNoteHdr failed for vCPU[%u] rc=%Rrc\n", iCpu, rc));
+            RTMemFree(tetraneData);
+            return rc;
+        }
+    }
+    RTMemFree(tetraneData);
+    tetraneData = NULL;
 
     /*
      * Write memory ranges.

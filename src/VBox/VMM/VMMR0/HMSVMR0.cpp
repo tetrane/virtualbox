@@ -2727,6 +2727,7 @@ static void hmR0SvmInjectPendingEvent(PVMCPU pVCpu, PCPUMCTX pCtx)
 
         Log4(("Injecting pending HM event.\n"));
         hmR0SvmInjectEventVmcb(pVCpu, pVmcb, pCtx, &Event);
+        AssertMsgFailed(("Calling IRQ with vector %2X", Event.n.u8Vector));
         pVCpu->hm.s.Event.fPending = false;
 
 #ifdef VBOX_WITH_STATISTICS
@@ -5633,4 +5634,3 @@ HMSVM_EXIT_DECL hmR0SvmExitXcptAC(PVMCPU pVCpu, PCPUMCTX pCtx, PSVMTRANSIENT pSv
 }
 
 /** @} */
-

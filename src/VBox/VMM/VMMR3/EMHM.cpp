@@ -50,6 +50,8 @@
 
 #include <iprt/asm.h>
 
+#include <VBox/vmm/tetrane.h>
+
 
 /*********************************************************************************************************************************
 *   Defined Constants And Macros                                                                                                 *
@@ -98,6 +100,7 @@ VMMR3_INT_DECL(VBOXSTRICTRC) EMR3HmSingleInstruction(PVM pVM, PVMCPU pVCpu, uint
     uint64_t const uOldRip = pCtx->rip;
     for (;;)
     {
+        flush_data(pVM);
         /*
          * Service necessary FFs before going into HM.
          */
@@ -388,6 +391,8 @@ int emR3HmExecute(PVM pVM, PVMCPU pVCpu, bool *pfFFDone)
      */
     for (;;)
     {
+        flush_data(pVM);
+
         STAM_PROFILE_ADV_START(&pVCpu->em.s.StatHmEntry, a);
 
         /* Check if a forced reschedule is pending. */
@@ -507,4 +512,3 @@ int emR3HmExecute(PVM pVM, PVMCPU pVCpu, bool *pfFFDone)
 #endif
     return rc;
 }
-

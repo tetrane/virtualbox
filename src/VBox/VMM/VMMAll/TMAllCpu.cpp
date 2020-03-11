@@ -182,7 +182,6 @@ int tmCpuTickPauseLocked(PVM pVM, PVMCPU pVCpu)
         }
         return VINF_SUCCESS;
     }
-    AssertFailed();
     return VERR_TM_TSC_ALREADY_PAUSED;
 }
 
@@ -353,7 +352,7 @@ DECLINLINE(uint64_t) tmCpuCalcTicksToDeadline(PVMCPU pVCpu, uint64_t cNsToDeadli
 VMM_INT_DECL(uint64_t) TMCpuTickGetDeadlineAndTscOffset(PVM pVM, PVMCPU pVCpu, uint64_t *poffRealTsc,
                                                         bool *pfOffsettedTsc, bool *pfParavirtTsc)
 {
-    Assert(pVCpu->tm.s.fTSCTicking || DBGFIsStepping(pVCpu));
+    //Assert(pVCpu->tm.s.fTSCTicking || DBGFIsStepping(pVCpu));
 
     *pfParavirtTsc = pVM->tm.s.fParavirtTscEnabled;
 
@@ -564,4 +563,3 @@ VMM_INT_DECL(bool) TMCpuTickIsTicking(PVMCPU pVCpu)
 {
     return pVCpu->tm.s.fTSCTicking;
 }
-

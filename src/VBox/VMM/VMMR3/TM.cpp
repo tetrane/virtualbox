@@ -447,6 +447,7 @@ VMM_INT_DECL(int) TMR3Init(PVM pVM)
     if (RT_FAILURE(rc))
         return VMSetError(pVM, rc, RT_SRC_POS,
                           N_("Configuration error: Failed to querying bool value \"TSCTiedToExecution\""));
+    pVM->tm.s.fTSCTiedToExecution = true;
     if (pVM->tm.s.fTSCTiedToExecution)
         pVM->tm.s.enmTSCMode = TMTSCMODE_VIRT_TSC_EMULATED;
 
@@ -3537,4 +3538,3 @@ static const char *tmR3GetTSCModeName(PVM pVM)
     Assert(pVM);
     return tmR3GetTSCModeNameEx(pVM->tm.s.enmTSCMode);
 }
-

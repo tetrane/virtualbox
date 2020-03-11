@@ -28,8 +28,6 @@
 #include <VBox/err.h>
 #include <iprt/assert.h>
 
-
-
 /**
  * \#DB (Debug event) handler.
  *
@@ -158,8 +156,15 @@ VMMRZ_INT_DECL(int) DBGFRZTrap03Handler(PVM pVM, PVMCPU pVCpu, PCPUMCTXCORE pReg
         }
     }
 
+    if (pVM->tetrane.vm_tweaks)
+    {
+        if (!pVM->tetrane.skip_next_int3)
+            return VINF_EM_DBG_BREAKPOINT;
+
+        pVM->tetrane.skip_next_int3 = false;
+    }
+
     return fInHyper
          ? VINF_EM_DBG_HYPER_ASSERTION
          : VINF_EM_RAW_GUEST_TRAP;
 }
-

@@ -41,6 +41,7 @@
 #endif
 
 
+# include <VBox/vmm/tetrane_structs.h>
 
 /** @defgroup grp_vm    The Virtual Machine
  * @ingroup grp_vmm
@@ -278,6 +279,9 @@ typedef struct VMCPU
 #endif
         uint8_t             padding[4096];      /* multiple of 4096 */
     } cpum;
+
+    struct tetrane_cpu_tweaks reven; /* multiple of 4096 */
+
 } VMCPU;
 
 
@@ -1301,6 +1305,10 @@ typedef struct VM
         uint8_t     padding[8];         /* multiple of 8 */
     } cfgm;
 
+    union {
+        /* Put the tetrane struct in the alignment padding*/
+        struct tetrane_tweaks tetrane;
+
     /** Padding for aligning the cpu array on a page boundary. */
 #if defined(VBOX_WITH_REM) && defined(VBOX_WITH_RAW_MODE)
     uint8_t         abAlignment2[3870];
@@ -1311,6 +1319,8 @@ typedef struct VM
 #else
     uint8_t         abAlignment2[1886];
 #endif
+
+    };
 
     /* ---- end small stuff ---- */
 
@@ -1336,4 +1346,3 @@ RT_C_DECLS_END
 /** @} */
 
 #endif
-

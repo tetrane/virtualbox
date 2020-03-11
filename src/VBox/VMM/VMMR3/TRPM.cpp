@@ -102,6 +102,9 @@
 #include <iprt/string.h>
 #include <iprt/alloc.h>
 
+#ifdef IN_RING3
+#include <VBox/vmm/tetrane.h>
+#endif
 
 /*********************************************************************************************************************************
 *   Structures and Typedefs                                                                                                      *
@@ -1636,4 +1639,3 @@ static DECLCALLBACK(void) trpmR3InfoEvent(PVM pVM, PCDBGFINFOHLP pHlp, const cha
     else
         pHlp->pfnPrintf(pHlp, "CPU[%u]: TRPM event - Query failed! rc=%Rrc\n", pVCpu->idCpu, rc);
 }
-

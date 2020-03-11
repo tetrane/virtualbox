@@ -408,6 +408,9 @@ static int hmR0InitIntel(uint32_t u32FeaturesECX, uint32_t u32FeaturesEDX)
             /* VPID 16 bits ASID. */
             g_HmR0.uMaxAsid                 = 0x10000; /* exclusive */
 
+            // Tetrane: We always want to VMEXIT on MSR access, so we can just disable the MSR Bitmap support
+            g_HmR0.vmx.Msrs.VmxProcCtls.n.allowed1 &= ~VMX_VMCS_CTRL_PROC_EXEC_USE_MSR_BITMAPS;
+
             if (g_HmR0.vmx.Msrs.VmxProcCtls.n.allowed1 & VMX_VMCS_CTRL_PROC_EXEC_USE_SECONDARY_EXEC_CTRL)
             {
                 g_HmR0.vmx.Msrs.VmxProcCtls2.u = ASMRdMsr(MSR_IA32_VMX_PROCBASED_CTLS2);

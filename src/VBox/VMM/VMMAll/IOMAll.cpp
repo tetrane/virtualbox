@@ -38,6 +38,7 @@
 #include <VBox/log.h>
 #include <iprt/assert.h>
 #include "IOMInline.h"
+#include <VBox/vmm/tetrane.h>
 
 
 /**
@@ -138,6 +139,12 @@ VMMDECL(VBOXSTRICTRC) IOMIOPortRead(PVM pVM, PVMCPU pVCpu, RTIOPORT Port, uint32
         PPDMDEVINS      pDevIns   = pRange->pDevIns;
         IOM_UNLOCK_SHARED(pVM);
 
+        // We need to return to ring 3 before calling the callback pfnInCallback which will read the port
+#ifndef IN_RING3
+        if (Port == 0x60 || Port == 0x64)
+            return VINF_IOM_R3_IOPORT_READ;
+#endif
+
         /*
          * Call the device.
          */
@@ -183,6 +190,10 @@ VMMDECL(VBOXSTRICTRC) IOMIOPortRead(PVM pVM, PVMCPU pVCpu, RTIOPORT Port, uint32
                     return VERR_IOM_INVALID_IOPORT_SIZE;
             }
         }
+
+#ifdef IN_RING3
+        read_port(pVM, Port, *pu32Value, cbValue, pRange);
+#endif
         Log3(("IOMIOPortRead: Port=%RTiop *pu32=%08RX32 cb=%d rc=%Rrc\n", Port, *pu32Value, cbValue, VBOXSTRICTRC_VAL(rcStrict)));
         return rcStrict;
     }
@@ -564,6 +575,11 @@ VMMDECL(VBOXSTRICTRC) IOMIOPortWrite(PVM pVM, PVMCPU pVCpu, RTIOPORT Port, uint3
             STAM_COUNTER_INC(&pStats->OutRZToR3);
 # endif
 #endif
+
+#ifdef IN_RING3
+        write_port(pVM, Port, u32Value, cbValue, pRange);
+#endif
+
         Log3(("IOMIOPortWrite: Port=%RTiop u32=%08RX32 cb=%d rc=%Rrc\n", Port, u32Value, cbValue, VBOXSTRICTRC_VAL(rcStrict)));
 #ifndef IN_RING3
         if (rcStrict == VINF_IOM_R3_IOPORT_WRITE)
@@ -805,4 +821,3 @@ void iomMmioFreeRange(PVM pVM, PIOMMMIORANGE pRange)
 {
     MMHyperFree(pVM, pRange);
 }
-

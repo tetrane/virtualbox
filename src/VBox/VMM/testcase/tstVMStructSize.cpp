@@ -554,6 +554,33 @@ int main()
     CHECK_EXPR(PGM_PAGE_GET_TYPE_NA(&Page)   == PGMPAGETYPE_RAM);
     CHECK_EXPR(PGM_PAGE_GET_STATE_NA(&Page)  == PGM_PAGE_STATE_ALLOCATED);
 
+    if (sizeof(struct tetrane_cpu_tweaks)&0xfff) {
+        printf(__FILE__ "/../../../../../include/VBox/vmm/tetrane_structs.h:76: "
+               "struct tetrane_cpu_tweaks size must be a multiple of 4096. "
+               "Currently its size is %lu, size&0xfff=%lu\n",
+               sizeof(struct tetrane_cpu_tweaks), sizeof(struct tetrane_cpu_tweaks)&0xfff);
+        ++rc;
+    }
+
+    VM vm{};
+
+    if (sizeof(struct tetrane_tweaks) > sizeof(vm.abAlignment2)) {
+        printf(__FILE__ "/../../../../../include/VBox/vmm/tetrane_structs.h:4:"
+               "struct tetrane_tweaks size must be lower than the padding in vm.h. "
+               "Currently its size is %lu, max is %lu\n",
+               sizeof(struct tetrane_cpu_tweaks), sizeof(vm.abAlignment2));
+        ++rc;
+    }
+
+    if (sizeof(struct sync_point) > SYNC_POINT_BYTES) {
+        printf(__FILE__ "/../../../../../include/VBox/vmm/tetrane_structs.h:14:"
+               "struct sync_point size must be SYNC_POINT_BYTES bytes max. "
+               "Currently its size is %lu\n",
+               sizeof(struct sync_point));
+        ++rc;
+    } else {
+        printf("sizeof(struct sync_point)=%lu\n", sizeof(struct sync_point));
+    }
 
     /*
      * Report result.

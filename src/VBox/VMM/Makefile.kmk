@@ -310,6 +310,17 @@ VBoxVMM_SOURCES.x86 += \
 VBoxVMM_SOURCES.amd64 += \
 	VMMSwitcher/AMD64Stub.asm
 
+VBoxVMM_SOURCES += VMMR3/tetrane/tweaks.cpp \
+	VMMR3/tetrane/vm_tweaks.cpp \
+	VMMR3/tetrane/breakpoints.cpp \
+	VMMR3/tetrane/commands.cpp \
+	VMMR3/tetrane/memory.cpp \
+	VMMR3/tetrane/io.cpp \
+	VMMR3/tetrane/sync_points.cpp \
+	VMMR3/tetrane/hardware.cpp \
+	VMMR3/tetrane/stream_file.cpp \
+	VMMR3/tetrane/plugin.cpp
+
 VBoxVMM_LIBS = \
 	$(PATH_STAGE_LIB)/DisasmR3$(VBOX_SUFF_LIB)
 ifdef VBOX_WITH_DEBUGGER

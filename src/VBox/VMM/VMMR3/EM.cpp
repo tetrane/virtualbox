@@ -795,6 +795,7 @@ static const char *emR3GetStateName(EMSTATE enmState)
 }
 #endif /* LOG_ENABLED || VBOX_STRICT */
 
+#include <VBox/vmm/tetrane.h>
 
 /**
  * Debug loop.
@@ -808,6 +809,8 @@ static VBOXSTRICTRC emR3Debug(PVM pVM, PVMCPU pVCpu, VBOXSTRICTRC rc)
 {
     for (;;)
     {
+        flush_data(pVM);
+
         Log(("emR3Debug: rc=%Rrc\n", VBOXSTRICTRC_VAL(rc)));
         const VBOXSTRICTRC rcLast = rc;
 
@@ -820,37 +823,32 @@ static VBOXSTRICTRC emR3Debug(PVM pVM, PVMCPU pVCpu, VBOXSTRICTRC rc)
              * Single step an instruction.
              */
             case VINF_EM_DBG_STEP:
-                if (   pVCpu->em.s.enmState == EMSTATE_DEBUG_GUEST_RAW
-                    || pVCpu->em.s.enmState == EMSTATE_DEBUG_HYPER
-                    || pVCpu->em.s.fForceRAW /* paranoia */)
-#ifdef VBOX_WITH_RAW_MODE
-                    rc = emR3RawStep(pVM, pVCpu);
-#else
-                    AssertLogRelMsgFailedStmt(("Bad EM state."), VERR_EM_INTERNAL_ERROR);
-#endif
-                else if (pVCpu->em.s.enmState == EMSTATE_DEBUG_GUEST_HM)
-                    rc = EMR3HmSingleInstruction(pVM, pVCpu, 0 /*fFlags*/);
-#ifdef VBOX_WITH_REM
-                else if (pVCpu->em.s.enmState == EMSTATE_DEBUG_GUEST_REM)
-                    rc = emR3RemStep(pVM, pVCpu);
-#endif
-                else
+                save_sync_point(pVM, pVCpu, CPUMQueryGuestCtxPtr(pVCpu), -1);
                 {
                     rc = IEMExecOne(pVCpu); /** @todo add dedicated interface... */
+                    if(rc == VERR_IEM_INSTR_NOT_IMPLEMENTED)
+                    {
+                        rc = tetrane_handle_instruction_not_implemented(pVM);
+                        break;
+                    }
+
                     if (rc == VINF_SUCCESS || rc == VINF_EM_RESCHEDULE)
                         rc = VINF_EM_DBG_STEPPED;
+
+                    rc = VINF_EM_DBG_STEPPED;
                 }
+                save_sync_point(pVM, pVCpu, CPUMQueryGuestCtxPtr(pVCpu), 0);
                 break;
 
             /*
              * Simple events: stepped, breakpoint, stop/assertion.
              */
             case VINF_EM_DBG_STEPPED:
-                rc = DBGFR3Event(pVM, DBGFEVENT_STEPPED);
+                rc = tetrane_handle_step_instruction(pVM);
                 break;
 
             case VINF_EM_DBG_BREAKPOINT:
-                rc = DBGFR3EventBreakpoint(pVM, DBGFEVENT_BREAKPOINT);
+                rc = tetrane_handle_int3(pVM);
                 break;
 
             case VINF_EM_DBG_STOP:
@@ -1101,6 +1099,8 @@ static int emR3RemExecute(PVM pVM, PVMCPU pVCpu, bool *pfFFDone)
     int     rc          = VINF_SUCCESS;
     for (;;)
     {
+        flush_data(pVM);
+
 #ifdef VBOX_WITH_REM
         /*
          * Lock REM and update the state if not already in sync.
@@ -2188,6 +2188,8 @@ VMMR3_INT_DECL(int) EMR3ExecuteVM(PVM pVM, PVMCPU pVCpu)
         STAM_REL_PROFILE_ADV_START(&pVCpu->em.s.StatTotal, x);
         for (;;)
         {
+            flush_data(pVM);
+
             /*
              * Before we can schedule anything (we're here because
              * scheduling is required) we must service any pending

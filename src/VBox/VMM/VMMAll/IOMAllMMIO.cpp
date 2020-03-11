@@ -45,7 +45,7 @@
 #include <iprt/asm.h>
 #include <iprt/string.h>
 
-
+#include <VBox/vmm/tetrane.h>
 
 #ifndef IN_RING3
 /**
@@ -315,6 +315,8 @@ static VBOXSTRICTRC iomMMIODoWrite(PVM pVM, PVMCPU pVCpu, PIOMMMIORANGE pRange, 
     else
         rcStrict = VINF_SUCCESS;
 
+    save_mmio_access(pVM, pVCpu, pRange->CTX_SUFF(pDevIns), GCPhysFault, cb, (const uint8_t*)pvData, true);
+
     STAM_PROFILE_STOP(&pStats->CTX_SUFF_Z(ProfWrite), a);
     STAM_COUNTER_INC(&pStats->Accesses);
     return rcStrict;
@@ -544,6 +546,8 @@ DECLINLINE(VBOXSTRICTRC) iomMMIODoRead(PVM pVM, PVMCPU pVCpu, PIOMMMIORANGE pRan
             case VINF_IOM_MMIO_UNUSED_00: rcStrict = iomMMIODoRead00s(pvValue, cbValue); break;
         }
     }
+
+    save_mmio_access(pVM, pVCpu, pRange->CTX_SUFF(pDevIns), GCPhys, cbValue, (const uint8_t*) pvValue, false);
 
     STAM_PROFILE_STOP(&pStats->CTX_SUFF_Z(ProfRead), a);
     STAM_COUNTER_INC(&pStats->Accesses);
@@ -902,6 +906,9 @@ VMMDECL(VBOXSTRICTRC) IOMMMIORead(PVM pVM, PVMCPU pVCpu, RTGCPHYS GCPhys, uint32
                                                    pu32Value, (unsigned)cbValue);
         else
             rc = iomMMIODoComplicatedRead(pVM, pRange, GCPhys, pu32Value, (unsigned)cbValue);
+
+        save_mmio_access(pVM, pVCpu, pRange->CTX_SUFF(pDevIns), GCPhys, cbValue, (const uint8_t*)pu32Value, false);
+
         STAM_PROFILE_STOP(&pStats->CTX_SUFF_Z(ProfRead), a);
         switch (VBOXSTRICTRC_VAL(rc))
         {
@@ -1035,6 +1042,9 @@ VMMDECL(VBOXSTRICTRC) IOMMMIOWrite(PVM pVM, PVMCPU pVCpu, RTGCPHYS GCPhys, uint3
                                                     GCPhys, &u32Value, (unsigned)cbValue);
         else
             rc = iomMMIODoComplicatedWrite(pVM, pVCpu, pRange, GCPhys, &u32Value, (unsigned)cbValue);
+
+        save_mmio_access(pVM, pVCpu, pRange->CTX_SUFF(pDevIns), GCPhys, cbValue, (const uint8_t*)&u32Value, true);
+
         STAM_PROFILE_STOP(&pStats->CTX_SUFF_Z(ProfWrite), a);
 #ifndef IN_RING3
         if (    rc == VINF_IOM_R3_MMIO_WRITE
@@ -1262,4 +1272,3 @@ VMMDECL(int) IOMMMIOResetRegion(PVM pVM, RTGCPHYS GCPhys)
 }
 
 #endif /* !IN_RC */
-

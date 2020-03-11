@@ -1103,8 +1103,12 @@ VMMDECL(uint32_t)   CPUMGetGuestEBX(PVMCPU pVCpu);
 VMMDECL(uint32_t)   CPUMGetGuestECX(PVMCPU pVCpu);
 VMMDECL(uint32_t)   CPUMGetGuestEDX(PVMCPU pVCpu);
 VMMDECL(uint32_t)   CPUMGetGuestESI(PVMCPU pVCpu);
+// TETRANE: We can't directly access RSI from our source file
+VMMDECL(uint64_t)   CPUMGetGuestRSI(PVMCPU pVCpu);
 VMMDECL(uint32_t)   CPUMGetGuestEDI(PVMCPU pVCpu);
 VMMDECL(uint32_t)   CPUMGetGuestESP(PVMCPU pVCpu);
+// TETRANE: We can't directly access RSP from our source file
+VMMDECL(uint64_t)   CPUMGetGuestRSP(PVMCPU pVCpu);
 VMMDECL(uint32_t)   CPUMGetGuestEBP(PVMCPU pVCpu);
 VMMDECL(RTSEL)      CPUMGetGuestCS(PVMCPU pVCpu);
 VMMDECL(RTSEL)      CPUMGetGuestDS(PVMCPU pVCpu);

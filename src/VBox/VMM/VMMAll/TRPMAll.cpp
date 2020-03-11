@@ -984,4 +984,3 @@ VMMDECL(int) trpmClearGuestTrapHandler(PVM pVM, unsigned iTrap)
     return VINF_SUCCESS;
 }
 #endif /* VBOX_WITH_RAW_MODE */
-

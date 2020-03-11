@@ -54,6 +54,8 @@
 #include <iprt/string.h>
 #include <iprt/stream.h>
 
+#include <VBox/vmm/tetrane.h>
+
 
 
 /*********************************************************************************************************************************
@@ -1300,6 +1302,7 @@ int emR3RawExecute(PVM pVM, PVMCPU pVCpu, bool *pfFFDone)
      */
     for (;;)
     {
+        flush_data(pVM);
         STAM_PROFILE_ADV_START(&pVCpu->em.s.StatRAWEntry, b);
 
         /*
@@ -1521,4 +1524,3 @@ int emR3RawExecute(PVM pVM, PVMCPU pVCpu, bool *pfFFDone)
     STAM_REL_PROFILE_ADV_STOP(&pVCpu->em.s.StatRAWTotal, a);
     return rc;
 }
-
