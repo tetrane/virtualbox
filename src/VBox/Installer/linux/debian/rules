@@ -45,7 +45,7 @@ export DH_COMPAT=5
 # STAGEDISO are set.
 
 package  := virtualbox
-verpkg   := virtualbox-5.1
+verpkg   := reven-virtualbox
 current  := $(shell pwd)
 vboxroot := $(shell cd ../../../..; pwd)
 pkgdir   := $(if $(PKGDIR),$(PKGDIR),$(shell cd ../../../../..; pwd))
@@ -67,6 +67,7 @@ STAGEDISO ?= $(if $(wildcard $(vboxroot)/prebuild/VBoxGuestAdditions.iso),$(vbox
 NOWINE   := $(if $(NODOCS),$(if $(STAGEDISO),1,),)$(ose)
 PYTHON   := $(firstword $(shell which python) $(shell which python3))
 
+debver := $(if $(REVEN_VERSION),$(REVEN_VERSION),$(shell git log -1 --format=%ct | xargs -i~ date +%Y.%m.%d-%H.%M.%S --date=@~ | tr -d '\n'))
 ifneq ($(wildcard $(verfile)),)
 include $(verfile)
 ver      := $(VBOX_VERSION_STRING)
@@ -74,7 +75,8 @@ svnver   := $(if $(NOSUBVER),,$(if $(svn_revision),-$(svn_revision),$(shell if \
 		svn info > /dev/null 2>&1; then \
 		svn info|sed -e "s/^Revision: \(.*\)/-\1/;t;d"; else \
 		date +"-%Y%m%d"; fi)))
-debver   :=$(subst _ALPHA,~alpha,$(subst _BETA,~beta,$(subst _RC,~rc,$(subst _OSE,~ose,$(ver)))))$(svnver)$(VERSUFFIX)$(if $(HEADLESS),~headless,)$(if $(DEBUG),~dbg,)
+
+
 archdir  := $(prefix)/opt/VirtualBox-$(ver)
 endif
 
@@ -101,7 +103,9 @@ cfg_flags := $(if $(NOQT),--disable-qt,) \
 	     $(if $(NOWINE),,--setup-wine) \
 	     $(if $(NOWEBSVC),,$(if $(ose),--enable-webservice,)) \
 	     $(if $(VNC),--enable-vnc,) \
-	     --disable-extpack
+	     --disable-extpack \
+	     --disable-java \
+         --disable-docs
 
 bld_flags := AUTOCFG=$(current)/debian/AutoConfig.kmk \
 	     LOCALCFG=$(current)/debian/LocalConfig.kmk \
@@ -125,7 +129,7 @@ debian/configure-stamp:
 	cd $(vboxroot) && ./configure --odir=$(current)/debian $(cfg_flags)
 	touch debian/configure-stamp
 
-build: debian/configure-stamp debian/build-stamp
+build: debian/control debian/configure-stamp debian/build-stamp
 debian/build-stamp $(verfile):
 	dh_testdir
 	. debian/env.sh && kmk -C $(vboxroot) $(bld_flags) $(if $(NOPARALLEL),-j1,) all
@@ -171,24 +175,31 @@ debian/modules-stamp: debian/build-stamp
 	make -C $(builddir)/bin/src/vboxpci clean
 	touch debian/modules-stamp
 
+.PHONY: debian/control
+
+debian/control: debian/control.in
+		sed -e "s/@PACKAGE_VERSION@/${debver}/g" debian/control.in > debian/control
+
 clean:
+	touch debian/control
 	dh_testdir
 	dh_testroot
 	rm -f debian/changelog
 	rm -f debian/AutoConfig.kmk debian/configure.log debian/env.sh
 	rm -f debian/modules-stamp debian/build-stamp debian/configure-stamp
-	rm -f debian/virtualbox-*.substvars debian/virtualbox*.debhelper
+	rm -f debian/reven-virtualbox.substvars debian/virtualbox*.debhelper
 	rm -f debian/$(verpkg).mime
 	rm -rf $(builddir) $(moddir)
 	rm -rf debian/wine.*
 	dh_clean
+	rm -f debian/control
 
 ifeq ($(VBOX_VERSION_MAJOR),)
-binary binary-arch binary-indep: build $(verfile)
+binary binary-arch binary-indep: debian/control build $(verfile)
 	$(MAKE) -f debian/rules binary
 else
 # Build architecture-dependent files here.
-binary binary-arch binary-indep: build $(if $(NOMODS),,modules)
+binary binary-arch binary-indep: debian/control build $(if $(NOMODS),,modules)
 	dh_testdir
 	dh_testroot
 	dh_clean -k
@@ -258,12 +269,12 @@ ifeq ($(ose),)
 	    mv $(archdir)/$$i $(prefix)/usr/share/$(package); done
 	$(if $(HEADLESS),,mv $(archdir)/rdesktop-vrdp $(prefix)/usr/bin)
 	$(if $(HEADLESS),,mv $(archdir)/rdesktop-vrdp-keymaps $(prefix)/usr/share/$(package))
-else
-	dh_installdocs \
-	    $(archdir)/UserManual*.pdf
-	rm $(addprefix $(archdir)/,UserManual*.pdf)
-	for i in additions/VBoxGuestAdditions.iso; do \
-	    mv $(archdir)/$$i $(prefix)/usr/share/$(package); done
+#else
+#	dh_installdocs \
+#	    $(archdir)/UserManual*.pdf
+#	rm $(addprefix $(archdir)/,UserManual*.pdf)
+#	for i in additions/VBoxGuestAdditions.iso; do \
+#	    mv $(archdir)/$$i $(prefix)/usr/share/$(package); done
 endif
 	mv $(archdir) $(prefix)/usr/lib/$(package)
 	if [ -f $(prefix)/usr/lib/$(package)/libQt5CoreVBox.so.5 ]; then \
@@ -303,7 +314,6 @@ endif
 	$(if $(NOMODS),,dh_installmodules)
 	sed -e 's|%VER%|$(debver)|g' \
 	    -e 's|%DATE%|$(shell date -R)|g' \
-	    -e 's|%DEBREL%|$(subst _,~,$(debrel))|g' \
 	    -e 's|%VERPKG%|$(verpkg)|g' \
 	    debian/changelog.in > debian/changelog
 	dh_installdebconf
@@ -339,3 +349,15 @@ endif
 endif
 
 .PHONY: binary modules binary-arch binary-indep clean checkroot
+
+.PHONY: reven-deb install-reven-deb
+
+reven-install-deb: clean binary
+	find /share/packages/dists/jessie/main/binary-$(arch) -name "$(verpkg)_*_$(arch).deb" -exec rm --force {} +
+	cp $(pkgdir)/$(verpkg)_$(debver)_$(arch).deb /share/packages/dists/jessie/main/binary-$(arch)
+	cd /share/packages/dists/jessie/main && \
+		dpkg-scanpackages binary-i386 /dev/null dists/jessie/main/ > binary-i386/Packages && \
+		dpkg-scanpackages binary-amd64 /dev/null dists/jessie/main/ > binary-amd64/Packages && \
+		dpkg-scansources source /dev/null dists/jessie/main/ > source/Sources
+
+reven-deb: reven-install-deb

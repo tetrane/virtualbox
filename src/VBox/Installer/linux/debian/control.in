@@ -1,7 +1,8 @@
-Source: virtualbox-5.1
+Source: reven-virtualbox
+Version: @PACKAGE_VERSION@
 Section: contrib/misc
 Priority: optional
-Maintainer: Oracle Corporation <info@virtualbox.org>
+Maintainer: Tetrane
 Standards-Version: 3.2.1
 Build-Depends: debhelper (>= 5), libz-dev, libssl-dev, libqt4-dev,
   libqt4-opengl-dev, libsdl1.2-dev, uuid-dev, libxcursor-dev,
@@ -13,7 +14,8 @@ Build-Depends: debhelper (>= 5), libz-dev, libssl-dev, libqt4-dev,
   libxext-dev, libcurl-dev, libxrandr-dev, openjdk-6-jdk | sun-java6-jdk
 XS-Python-Version: >= 2.4
 
-Package: virtualbox-5.1
+Package: reven-virtualbox
+Version: @PACKAGE_VERSION@
 Architecture: i386 amd64
 Pre-Depends: debconf (>= 1.1) | debconf-2.0
 Depends: ${shlibs:Depends}, debconf (>= 0.5) | debconf-2.0, psmisc, adduser
@@ -21,28 +23,18 @@ Recommends: ${alsa}, ${pulse}, ${sdlttf}, kmod | kldutils | module-init-tools,
   linux-headers-generic | linux-headers-generic-pae | linux-headers-686-pae | linux-headers-amd64 | linux-headers-2.6-686 | linux-headers-2.6-amd64 | linux-headers,
   linux-image, gcc, make | build-essential | dpkg-dev, binutils,
   pdf-viewer, libgl1
-Provides: virtualbox
-Replaces: virtualbox
-Conflicts: virtualbox, virtualbox-ose, virtualbox-guest-additions-iso
-Description: Oracle VM VirtualBox
- VirtualBox is a powerful PC virtualization solution allowing you to run a
- wide range of PC operating systems on your Linux system. This includes
- Windows, Linux, FreeBSD, DOS, OpenBSD and others. VirtualBox comes with a broad
- feature set and excellent performance, making it the premier virtualization
- software solution on the market.
+Provides: reven-virtualbox
+Replaces: virtualbox-qt, virtualbox, virtualbox-dkms, virtualbox-source,
+Conflicts: virtualbox-qt, virtualbox, virtualbox-dkms, virtualbox-source, virtualbox-qt, virtualbox-ose, virtualbox-guest-additions-iso
+Description: Tetrane VirtualBox.
 XB-Python-Version: ${python:Versions}
 
-Package: virtualbox-5.1-dbg
+Package: reven-virtualbox-dbg
+Version: @PACKAGE_VERSION@
 Architecture: i386 amd64
-Depends: virtualbox-5.1 (= ${binary:Version})
-Provides: virtualbox-dbg
-Replaces: virtualbox-dbg
+Depends: reven-virtualbox (= ${source:Version})
+Provides: reven-virtualbox-dbg
+Replaces: reven-virtualbox-dbg
 Conflicts: virtualbox-dbg, virtualbox-ose-dbg
-Description: Oracle VM VirtualBox debugging symbols
- VirtualBox is a powerful PC virtualization solution allowing you to run a
- wide range of PC operating systems on your Linux system. This includes
- Windows, Linux, FreeBSD, DOS, OpenBSD and others. VirtualBox comes with a broad
- feature set and excellent performance, making it the premier virtualization
- software solution on the market.
- .
+Description: Tetrane VirtualBox.
  This package contains debugging symbols.
