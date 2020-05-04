@@ -1,0 +1,21 @@
+stages:
+    - build
+
+build:linux:
+  image: debian:stretch-slim
+  stage: build
+  interruptible: true
+  variables:
+    PKGDIR: "packages/"
+    VNC: 1
+  script:
+    - env
+    - apt-get update -qq && apt-get install -y -qq lsb-release build-essential cmake
+    - ./DEPENDENCIES_DEV.sh
+    - mkdir -p "$PKGDIR"
+    - fakeroot src/VBox/Installer/linux/debian/rules configure
+    - fakeroot src/VBox/Installer/linux/debian/rules build
+    - fakeroot src/VBox/Installer/linux/debian/rules binary
+  artifacts:
+      paths:
+          - packages/
