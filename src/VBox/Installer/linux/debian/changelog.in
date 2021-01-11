@@ -1,4 +1,4 @@
-%VERPKG% (%VER%%DEBREL%) unstable; urgency=low
+%VERPKG% (%VER%) unstable; urgency=low
 
   * rebuild Debian package
 
