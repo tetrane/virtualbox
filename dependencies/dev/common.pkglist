@@ -1,0 +1,33 @@
+# VBox
+debhelper
+fakeroot
+genisoimage
+git
+iasl
+libc6-dev-i386
+libcap-dev
+libcurl4-openssl-dev
+libdevmapper-dev
+libidl-dev
+libpam-dev
+libpng-dev
+libopus-dev
+libqt5x11extras5-dev
+libsdl-dev
+libssl-dev
+libvncserver-dev
+libvpx-dev
+libxcursor-dev
+libxinerama-dev
+libxml2-dev
+libxmu-dev
+libxrandr-dev
+linux-headers-amd64
+makeself
+pkg-config
+python-dev
+qttools5-dev-tools
+xsltproc
+zip
+# libvncserver
+libgcrypt20-dev
