@@ -1374,6 +1374,10 @@ typedef CPUMFEATURES const *PCCPUMFEATURES;
 
 /** @name Guest Register Getters.
  * @{ */
+// TETRANE: We can't directly access RSP from our source file
+VMMDECL(uint64_t)       CPUMGetGuestRSP(PVMCPU pVCpu);
+// TETRANE: We can't directly access RSI from our source file
+VMMDECL(uint64_t)       CPUMGetGuestRSI(PVMCPU pVCpu);
 VMMDECL(void)           CPUMGetGuestGDTR(PCVMCPU pVCpu, PVBOXGDTR pGDTR);
 VMMDECL(RTGCPTR)        CPUMGetGuestIDTR(PCVMCPU pVCpu, uint16_t *pcbLimit);
 VMMDECL(RTSEL)          CPUMGetGuestTR(PCVMCPU pVCpu, PCPUMSELREGHID pHidden);
