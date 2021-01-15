@@ -80,6 +80,10 @@ VBoxVMM_INCS     = \
 	include \
 	$(if-expr defined(VBOX_WITH_RAW_MODE),PATM,) \
 	$(VBoxVMM_0_OUTDIR)/CommonGenIncs
+
+VBoxVMM_INCS    += \
+	$(VBOX_GRAPHICS_INCS)
+
 VBoxVMM_ASINCS   = .
 
 VBoxVMM_SOURCES  = \
@@ -227,6 +231,9 @@ VBoxVMM_SOURCES += \
 	VMMR3/PDMNetShaper.cpp \
 	VMMAll/PDMAllNetShaper.cpp
 endif
+
+VBoxVMM_SOURCES += VMMR3/tetrane/tweaks.cpp \
+	VMMR3/tetrane/vm_tweaks.cpp
 
 ifdef VBOX_WITH_NATIVE_NEM
 VBoxVMM_SOURCES.win.amd64 += VMMR3/NEMR3Native-win.cpp
