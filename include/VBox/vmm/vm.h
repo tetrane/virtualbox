@@ -47,6 +47,7 @@
 # define VMM_INCLUDED_SRC_include_CPUMInternal_h
 #endif
 
+# include <VBox/vmm/tetrane_structs.h>
 
 
 /** @defgroup grp_vm    The Virtual Machine
@@ -318,6 +319,9 @@ typedef struct VMCPU
 #endif
         uint8_t             padding[40960];      /* multiple of 4096 */
     } em;
+
+    struct tetrane_cpu_tweaks reven; /* multiple of 4096 */
+
 } VMCPU;
 
 
@@ -1448,8 +1452,13 @@ typedef struct VM
         uint64_t    au64Padding[6];     /* probably more comming here... */
     } R0Stats;
 
-    /** Padding for aligning the structure size on a page boundrary. */
-    uint8_t         abAlignment2[600 - 64 + 256 - sizeof(PVMCPUR3) * VMM_MAX_CPU_COUNT];
+    union {
+        /* Put the tetrane struct in the alignment padding*/
+        struct    tetrane_tweaks tetrane;
+
+        /** Padding for aligning the structure size on a page boundrary. */
+        uint8_t     abAlignment2[600 - 64 + 256 - sizeof(PVMCPUR3) * VMM_MAX_CPU_COUNT];
+    };
 
     /* ---- end small stuff ---- */
 
