@@ -46,6 +46,8 @@
 #include <iprt/asm.h>
 #include <iprt/string.h>
 
+#include <VBox/vmm/tetrane.h>
+
 
 /*********************************************************************************************************************************
 *   Defined Constants And Macros                                                                                                 *
@@ -342,6 +344,7 @@ DECLINLINE(VBOXSTRICTRC) iomMmioDoWrite(PVMCC pVM, PVMCPU pVCpu, CTX_SUFF(PIOMMM
     VBOXSTRICTRC rcStrict;
     if (RT_LIKELY(pRegEntry->pfnWriteCallback))
     {
+        save_mmio_access(pVM, NULL, pRegEntry->pDevIns, GCPhys, cb, (const uint8_t*)pvData, true);
         if (   (cb == 4 && !(GCPhys & 3))
             || (pRegEntry->fFlags & IOMMMIO_FLAGS_WRITE_MODE) == IOMMMIO_FLAGS_WRITE_PASSTHRU
             || (cb == 8 && !(GCPhys & 7) && IOMMMIO_DOES_WRITE_MODE_ALLOW_QWORD(pRegEntry->fFlags)) )
@@ -586,6 +589,7 @@ DECLINLINE(VBOXSTRICTRC) iomMmioDoRead(PVMCC pVM, CTX_SUFF(PIOMMMIOENTRY) pRegEn
     VBOXSTRICTRC rcStrict;
     if (RT_LIKELY(pRegEntry->pfnReadCallback))
     {
+        save_mmio_access(pVM, NULL, pRegEntry->pDevIns, GCPhys, cbValue, (const uint8_t*)pvValue, false);
         if (   (   cbValue == 4
                 && !(GCPhys & 3))
             || (pRegEntry->fFlags & IOMMMIO_FLAGS_READ_MODE) == IOMMMIO_FLAGS_READ_PASSTHRU
