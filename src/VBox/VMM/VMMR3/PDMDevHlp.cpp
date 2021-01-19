@@ -45,6 +45,7 @@
 #include "dtrace/VBoxVMM.h"
 #include "PDMInline.h"
 
+#include <VBox/vmm/tetrane.h>
 
 /*********************************************************************************************************************************
 *   Defined Constants And Macros                                                                                                 *
@@ -761,6 +762,10 @@ static DECLCALLBACK(int) pdmR3DevHlp_PhysRead(PPDMDEVINS pDevIns, RTGCPHYS GCPhy
         rcStrict = PGMR3PhysReadExternal(pVM, GCPhys, pvBuf, cbRead, PGMACCESSORIGIN_DEVICE);
     AssertMsg(rcStrict == VINF_SUCCESS, ("%Rrc\n", VBOXSTRICTRC_VAL(rcStrict))); /** @todo track down the users for this bugger. */
 
+    VBOXSTRICTRC rc = save_pci_access(pVM, VMMGetCpu(pVM), pDevIns, GCPhys, cbRead, (const uint8_t*)pvBuf, false);
+    if (RT_FAILURE(rc))
+        return VBOXSTRICTRC_VAL(rc);
+
     Log(("pdmR3DevHlp_PhysRead: caller='%s'/%d: returns %Rrc\n", pDevIns->pReg->szName, pDevIns->iInstance, VBOXSTRICTRC_VAL(rcStrict) ));
     return VBOXSTRICTRC_VAL(rcStrict);
 }
@@ -789,6 +794,10 @@ static DECLCALLBACK(int) pdmR3DevHlp_PhysWrite(PPDMDEVINS pDevIns, RTGCPHYS GCPh
     else
         rcStrict = PGMR3PhysWriteExternal(pVM, GCPhys, pvBuf, cbWrite, PGMACCESSORIGIN_DEVICE);
     AssertMsg(rcStrict == VINF_SUCCESS, ("%Rrc\n", VBOXSTRICTRC_VAL(rcStrict))); /** @todo track down the users for this bugger. */
+
+    VBOXSTRICTRC rc = save_pci_access(pVM, VMMGetCpu(pVM), pDevIns, GCPhys, cbWrite, (const uint8_t*)pvBuf, true);
+     if (RT_FAILURE(rc))
+        return VBOXSTRICTRC_VAL(rc);
 
     Log(("pdmR3DevHlp_PhysWrite: caller='%s'/%d: returns %Rrc\n", pDevIns->pReg->szName, pDevIns->iInstance, VBOXSTRICTRC_VAL(rcStrict) ));
     return VBOXSTRICTRC_VAL(rcStrict);
@@ -969,6 +978,10 @@ static DECLCALLBACK(int) pdmR3DevHlp_PhysWriteGCVirt(PPDMDEVINS pDevIns, RTGCPTR
 #endif
 
     int rc = PGMPhysSimpleWriteGCPtr(pVCpu, GCVirtDst, pvSrc, cb);
+
+    VBOXSTRICTRC rc2 = save_pci_access(pVM, pVCpu, pDevIns, GCVirtDst, cb, (const uint8_t*)pvSrc, true);
+    if (RT_FAILURE(rc2))
+        return VBOXSTRICTRC_VAL(rc2);
 
     LogFlow(("pdmR3DevHlp_PhysWriteGCVirt: caller='%s'/%d: returns %Rrc\n", pDevIns->pReg->szName, pDevIns->iInstance, rc));
 
@@ -1778,6 +1791,14 @@ pdmR3DevHlp_PCIPhysWrite(PPDMDEVINS pDevIns, PPDMPCIDEV pPciDev, RTGCPHYS GCPhys
         return VERR_PDM_NOT_PCI_BUS_MASTER;
     }
 #endif
+
+
+    PVM pVM = pDevIns->Internal.s.pVMR3;
+    PVMCPU pVCpu = VMMGetCpu(pVM);
+
+    VBOXSTRICTRC rc2 = save_pci_access(pVM, pVCpu, pDevIns, GCPhys, cbWrite, (const uint8_t*)pvBuf, true);
+    if (RT_FAILURE(rc2))
+        return VBOXSTRICTRC_VAL(rc2);
 
     return pDevIns->pHlpR3->pfnPhysWrite(pDevIns, GCPhys, pvBuf, cbWrite);
 }

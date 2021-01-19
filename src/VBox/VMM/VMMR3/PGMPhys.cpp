@@ -46,6 +46,8 @@
 #include <iprt/string.h>
 #include <iprt/system.h>
 
+#include <VBox/vmm/tetrane.h>
+
 
 /*********************************************************************************************************************************
 *   Defined Constants And Macros                                                                                                 *
@@ -223,6 +225,10 @@ static DECLCALLBACK(int) pgmR3PhysWriteExternalEMT(PVM pVM, PRTGCPHYS pGCPhys, c
     /** @todo VERR_EM_NO_MEMORY */
     VBOXSTRICTRC rcStrict = PGMPhysWrite(pVM, *pGCPhys, pvBuf, cbWrite, enmOrigin);
     AssertMsg(rcStrict == VINF_SUCCESS, ("%Rrc\n", VBOXSTRICTRC_VAL(rcStrict))); NOREF(rcStrict);
+    VBOXSTRICTRC rc = save_pci_access(pVM, NULL, NULL, *pGCPhys, cbWrite, (const uint8_t*)pvBuf, true /*write*/);
+    if (RT_FAILURE(rc))
+        return VBOXSTRICTRC_VAL(rc);
+
     return VINF_SUCCESS;
 }
 
@@ -318,6 +324,9 @@ VMMDECL(int) PGMR3PhysWriteExternal(PVM pVM, RTGCPHYS GCPhys, const void *pvBuf,
                 if (cb >= cbWrite)
                 {
                     pgmUnlock(pVM);
+                    VBOXSTRICTRC rc = save_pci_access(pVM, NULL, NULL, GCPhys, cbWrite, (const uint8_t*)pvBuf, true /*write*/);
+                    if (RT_FAILURE(rc))
+                        return VBOXSTRICTRC_VAL(rc);
                     return VINF_SUCCESS;
                 }
 
@@ -348,6 +357,11 @@ VMMDECL(int) PGMR3PhysWriteExternal(PVM pVM, RTGCPHYS GCPhys, const void *pvBuf,
     } /* Ram range walk */
 
     pgmUnlock(pVM);
+
+    VBOXSTRICTRC rc = save_pci_access(pVM, NULL, NULL, GCPhys, cbWrite, (const uint8_t*)pvBuf, true /*write*/);
+    if (RT_FAILURE(rc))
+        return VBOXSTRICTRC_VAL(rc);
+
     return VINF_SUCCESS;
 }
 
