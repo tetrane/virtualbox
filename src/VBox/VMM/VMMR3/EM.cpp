@@ -68,6 +68,7 @@
 #include <iprt/stream.h>
 #include <iprt/thread.h>
 
+#include <VBox/vmm/tetrane.h>
 
 /*********************************************************************************************************************************
 *   Internal Functions                                                                                                           *
@@ -799,6 +800,8 @@ static VBOXSTRICTRC emR3Debug(PVM pVM, PVMCPU pVCpu, VBOXSTRICTRC rc)
 {
     for (;;)
     {
+        flush_data(pVM);
+
         Log(("emR3Debug: rc=%Rrc\n", VBOXSTRICTRC_VAL(rc)));
         const VBOXSTRICTRC rcLast = rc;
 
@@ -1039,6 +1042,8 @@ static int emR3RemExecute(PVM pVM, PVMCPU pVCpu, bool *pfFFDone)
     int     rc          = VINF_SUCCESS;
     for (;;)
     {
+        flush_data(pVM);
+
         /*
          * Execute REM.
          */
@@ -2294,6 +2299,8 @@ VMMR3_INT_DECL(int) EMR3ExecuteVM(PVM pVM, PVMCPU pVCpu)
         STAM_REL_PROFILE_ADV_START(&pVCpu->em.s.StatTotal, x);
         for (;;)
         {
+            flush_data(pVM);
+
             /*
              * Before we can schedule anything (we're here because
              * scheduling is required) we must service any pending

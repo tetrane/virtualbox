@@ -48,6 +48,8 @@
 
 #include <iprt/asm.h>
 
+#include <VBox/vmm/tetrane.h>
+
 
 /*********************************************************************************************************************************
 *   Internal Functions                                                                                                           *
@@ -88,6 +90,7 @@ VBOXSTRICTRC emR3NemSingleInstruction(PVM pVM, PVMCPU pVCpu, uint32_t fFlags)
     uint64_t const uOldRip = pVCpu->cpum.GstCtx.rip;
     for (;;)
     {
+        flush_data(pVM);
         /*
          * Service necessary FFs before going into HM.
          */
@@ -339,6 +342,8 @@ VBOXSTRICTRC emR3NemExecute(PVM pVM, PVMCPU pVCpu, bool *pfFFDone)
      */
     for (;;)
     {
+        flush_data(pVM);
+
         STAM_PROFILE_ADV_START(&pVCpu->em.s.StatNEMEntry, a);
 
 #if 0
