@@ -7015,7 +7015,8 @@ static void hmR0VmxUpdateTscOffsettingAndPreemptTimer(PVMCPUCC pVCpu, PVMXTRANSI
         STAM_COUNTER_INC(&pVCpu->hm.s.StatTscParavirt);
     }
 
-    if (   fOffsettedTsc
+    // Tetrane: We always want to VMEXIT on RDTSC
+    if (0 && fOffsettedTsc
         && RT_LIKELY(!pVCpu->hm.s.fDebugWantRdTscExit))
     {
         if (pVmxTransient->fIsNestedGuest)
