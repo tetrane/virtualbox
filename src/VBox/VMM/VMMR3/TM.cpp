@@ -471,6 +471,7 @@ VMM_INT_DECL(int) TMR3Init(PVM pVM)
     if (RT_FAILURE(rc))
         return VMSetError(pVM, rc, RT_SRC_POS,
                           N_("Configuration error: Failed to querying bool value \"TSCTiedToExecution\""));
+    pVM->tm.s.fTSCTiedToExecution = true;
     if (pVM->tm.s.fTSCTiedToExecution && pVM->tm.s.enmTSCMode == TMTSCMODE_NATIVE_API)
         return VMSetError(pVM, VERR_INVALID_PARAMETER, RT_SRC_POS, N_("/TM/TSCTiedToExecution is not supported in NEM mode!"));
     if (pVM->tm.s.fTSCTiedToExecution)

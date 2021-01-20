@@ -15,6 +15,8 @@
  * hope that it will be useful, but WITHOUT ANY WARRANTY of any kind.
  */
 
+// TETRANE: apparently this is necessary
+#define HMVMX_ALWAYS_TRAP_ALL_XCPTS
 
 /*********************************************************************************************************************************
 *   Header Files                                                                                                                 *

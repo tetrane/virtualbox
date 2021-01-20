@@ -3687,6 +3687,7 @@ static void hmR0SvmInjectPendingEvent(PVMCPUCC pVCpu, PSVMVMCB pVmcb)
          */
         Log4(("Injecting pending HM event\n"));
         hmR0SvmInjectEventVmcb(pVCpu, pVmcb, &Event);
+        AssertMsgFailed(("Calling IRQ with vector %2X", Event.n.u8Vector));
         pVCpu->hm.s.Event.fPending = false;
 
         if (Event.n.u3Type == SVM_EVENT_EXTERNAL_IRQ)
