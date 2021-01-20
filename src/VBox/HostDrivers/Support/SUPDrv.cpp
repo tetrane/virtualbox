@@ -4654,6 +4654,8 @@ SUPR0DECL(int) SUPR0GetHwvirtMsrs(PSUPHWVIRTMSRS pMsrs, uint32_t fCaps, bool fFo
             Msrs.u.vmx.u64Cr4Fixed1 = ASMRdMsr(MSR_IA32_VMX_CR4_FIXED1);
             Msrs.u.vmx.u64VmcsEnum  = ASMRdMsr(MSR_IA32_VMX_VMCS_ENUM);
 
+            // Tetrane: force clear true ctls
+            RT_BF_CLEAR(Msrs.u.vmx.u64Basic, VMX_BF_BASIC_TRUE_CTLS);
             if (RT_BF_GET(Msrs.u.vmx.u64Basic, VMX_BF_BASIC_TRUE_CTLS))
             {
                 Msrs.u.vmx.u64TruePinCtls   = ASMRdMsr(MSR_IA32_VMX_TRUE_PINBASED_CTLS);
@@ -4661,6 +4663,9 @@ SUPR0DECL(int) SUPR0GetHwvirtMsrs(PSUPHWVIRTMSRS pMsrs, uint32_t fCaps, bool fFo
                 Msrs.u.vmx.u64TrueEntryCtls = ASMRdMsr(MSR_IA32_VMX_TRUE_ENTRY_CTLS);
                 Msrs.u.vmx.u64TrueExitCtls  = ASMRdMsr(MSR_IA32_VMX_TRUE_EXIT_CTLS);
             }
+
+            // Tetrane: We always want to VMEXIT on MSR access, so we can just disable the MSR Bitmap support
+            Msrs.u.vmx.u64ProcCtls &= ~(((uint64_t)VMX_PROC_CTLS_USE_MSR_BITMAPS) << 32);
 
             uint32_t const fProcCtlsAllowed1 = RT_HI_U32(Msrs.u.vmx.u64ProcCtls);
             if (fProcCtlsAllowed1 & VMX_PROC_CTLS_USE_SECONDARY_CTLS)
