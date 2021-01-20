@@ -2855,17 +2855,17 @@ static int cpumR3CpuIdSanitize(PVM pVM, PCPUM pCpum, PCPUMCPUIDCONFIG pConfig)
                            | (pConfig->enmPcid ? X86_CPUID_FEATURE_ECX_PCID : 0)
                            //| X86_CPUID_FEATURE_ECX_DCA   - not implemented yet.
                            | (pConfig->enmSse41 ? X86_CPUID_FEATURE_ECX_SSE4_1 : 0)
-                           | (pConfig->enmSse42 ? X86_CPUID_FEATURE_ECX_SSE4_2 : 0)
+                           // | (pConfig->enmSse42 ? X86_CPUID_FEATURE_ECX_SSE4_2 : 0) // TETRANE
                            //| X86_CPUID_FEATURE_ECX_X2APIC - turned on later by the device if enabled.
-                           | (pConfig->enmMovBe ? X86_CPUID_FEATURE_ECX_MOVBE : 0)
-                           | (pConfig->enmPopCnt ? X86_CPUID_FEATURE_ECX_POPCNT : 0)
+                           // | (pConfig->enmMovBe ? X86_CPUID_FEATURE_ECX_MOVBE : 0) // TETRANE
+                           // | (pConfig->enmPopCnt ? X86_CPUID_FEATURE_ECX_POPCNT : 0) // TETRANE
                            //| X86_CPUID_FEATURE_ECX_TSCDEADL - not implemented yet.
-                           | (pConfig->enmAesNi ? X86_CPUID_FEATURE_ECX_AES : 0)
-                           | (pConfig->enmXSave ? X86_CPUID_FEATURE_ECX_XSAVE : 0 )
+                           // | (pConfig->enmAesNi ? X86_CPUID_FEATURE_ECX_AES : 0) // TETRANE
+                           // | (pConfig->enmXSave ? X86_CPUID_FEATURE_ECX_XSAVE : 0 ) // TETRANE
                            //| X86_CPUID_FEATURE_ECX_OSXSAVE - mirrors CR4.OSXSAVE state, set dynamically.
-                           | (pConfig->enmAvx ? X86_CPUID_FEATURE_ECX_AVX : 0)
+                           // | (pConfig->enmAvx ? X86_CPUID_FEATURE_ECX_AVX : 0) // TETRANE
                            //| X86_CPUID_FEATURE_ECX_F16C  - not implemented yet.
-                           | (pConfig->enmRdRand ? X86_CPUID_FEATURE_ECX_RDRAND : 0)
+                           // | (pConfig->enmRdRand ? X86_CPUID_FEATURE_ECX_RDRAND : 0) // TETRANE
                            //| X86_CPUID_FEATURE_ECX_HVP   - Set explicitly later.
                            ;
 
@@ -3065,7 +3065,7 @@ static int cpumR3CpuIdSanitize(PVM pVM, PCPUM pCpum, PCPUMCPUIDCONFIG pConfig)
                                | (pConfig->enmAbm       ? X86_CPUID_AMD_FEATURE_ECX_ABM : 0)
                                | (pConfig->enmSse4A     ? X86_CPUID_AMD_FEATURE_ECX_SSE4A : 0)
                                | (pConfig->enmMisAlnSse ? X86_CPUID_AMD_FEATURE_ECX_MISALNSSE : 0)
-                               | (pConfig->enm3dNowPrf  ? X86_CPUID_AMD_FEATURE_ECX_3DNOWPRF : 0)
+                               //| (pConfig->enm3dNowPrf  ? X86_CPUID_AMD_FEATURE_ECX_3DNOWPRF : 0) // TETRANE
                                //| X86_CPUID_AMD_FEATURE_ECX_OSVW
                                //| X86_CPUID_AMD_FEATURE_ECX_IBS
                                //| X86_CPUID_AMD_FEATURE_ECX_XOP
@@ -3285,7 +3285,7 @@ static int cpumR3CpuIdSanitize(PVM pVM, PCPUM pCpum, PCPUMCPUIDCONFIG pConfig)
             {
                 pCurLeaf->uEax  = 0;    /* Max ECX input is 0. */
                 pCurLeaf->uEbx &= 0
-                               | (pConfig->enmFsGsBase ? X86_CPUID_STEXT_FEATURE_EBX_FSGSBASE : 0)
+                               //| (pConfig->enmFsGsBase ? X86_CPUID_STEXT_FEATURE_EBX_FSGSBASE : 0) // Tetrane
                                //| X86_CPUID_STEXT_FEATURE_EBX_TSC_ADJUST        RT_BIT(1)
                                //| X86_CPUID_STEXT_FEATURE_EBX_SGX               RT_BIT(2)
                                //| X86_CPUID_STEXT_FEATURE_EBX_BMI1              RT_BIT(3)
@@ -3295,7 +3295,7 @@ static int cpumR3CpuIdSanitize(PVM pVM, PCPUM pCpum, PCPUMCPUIDCONFIG pConfig)
                                //| X86_CPUID_STEXT_FEATURE_EBX_SMEP              RT_BIT(7)
                                //| X86_CPUID_STEXT_FEATURE_EBX_BMI2              RT_BIT(8)
                                //| X86_CPUID_STEXT_FEATURE_EBX_ERMS              RT_BIT(9)
-                               | (pConfig->enmInvpcid ? X86_CPUID_STEXT_FEATURE_EBX_INVPCID : 0)
+                               //| (pConfig->enmInvpcid ? X86_CPUID_STEXT_FEATURE_EBX_INVPCID : 0) // Tetrane
                                //| X86_CPUID_STEXT_FEATURE_EBX_RTM               RT_BIT(11)
                                //| X86_CPUID_STEXT_FEATURE_EBX_PQM               RT_BIT(12)
                                | X86_CPUID_STEXT_FEATURE_EBX_DEPR_FPU_CS_DS
@@ -3303,7 +3303,7 @@ static int cpumR3CpuIdSanitize(PVM pVM, PCPUM pCpum, PCPUMCPUIDCONFIG pConfig)
                                //| X86_CPUID_STEXT_FEATURE_EBX_PQE               RT_BIT(15)
                                //| X86_CPUID_STEXT_FEATURE_EBX_AVX512F           RT_BIT(16)
                                //| RT_BIT(17) - reserved
-                               | (pConfig->enmRdSeed ? X86_CPUID_STEXT_FEATURE_EBX_RDSEED : 0)
+                               // | (pConfig->enmRdSeed ? X86_CPUID_STEXT_FEATURE_EBX_RDSEED : 0) // TETRANE
                                //| X86_CPUID_STEXT_FEATURE_EBX_ADX               RT_BIT(19)
                                //| X86_CPUID_STEXT_FEATURE_EBX_SMAP              RT_BIT(20)
                                //| RT_BIT(21) - reserved
@@ -3322,11 +3322,11 @@ static int cpumR3CpuIdSanitize(PVM pVM, PCPUM pCpum, PCPUMCPUIDCONFIG pConfig)
                                //| X86_CPUID_STEXT_FEATURE_ECX_PREFETCHWT1 - we do not do vector functions yet.
                                ;
                 pCurLeaf->uEdx &= 0
-                               | (pConfig->enmMdsClear ? X86_CPUID_STEXT_FEATURE_EDX_MD_CLEAR : 0)
+                               //| (pConfig->enmMdsClear ? X86_CPUID_STEXT_FEATURE_EDX_MD_CLEAR : 0) // Tetrane
                                //| X86_CPUID_STEXT_FEATURE_EDX_IBRS_IBPB         RT_BIT(26)
                                //| X86_CPUID_STEXT_FEATURE_EDX_STIBP             RT_BIT(27)
-                               | (pConfig->enmFlushCmdMsr ? X86_CPUID_STEXT_FEATURE_EDX_FLUSH_CMD : 0)
-                               | (pConfig->enmArchCapMsr ? X86_CPUID_STEXT_FEATURE_EDX_ARCHCAP : 0)
+                               //| (pConfig->enmFlushCmdMsr ? X86_CPUID_STEXT_FEATURE_EDX_FLUSH_CMD : 0) // Tetrane
+                               //| (pConfig->enmArchCapMsr ? X86_CPUID_STEXT_FEATURE_EDX_ARCHCAP : 0) // Tetrane
                                ;
 
                 /* Mask out INVPCID unless FSGSBASE is exposed due to a bug in Windows 10 SMP guests, see @bugref{9089#c15}. */
