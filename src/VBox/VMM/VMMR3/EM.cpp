@@ -814,34 +814,31 @@ static VBOXSTRICTRC emR3Debug(PVM pVM, PVMCPU pVCpu, VBOXSTRICTRC rc)
              * Single step an instruction.
              */
             case VINF_EM_DBG_STEP:
-                if (   pVCpu->em.s.enmState == EMSTATE_DEBUG_GUEST_RAW
-                    || pVCpu->em.s.enmState == EMSTATE_DEBUG_HYPER)
-                    AssertLogRelMsgFailedStmt(("Bad EM state."), VERR_EM_INTERNAL_ERROR);
-                else if (pVCpu->em.s.enmState == EMSTATE_DEBUG_GUEST_HM)
-                    rc = EMR3HmSingleInstruction(pVM, pVCpu, 0 /*fFlags*/);
-                else if (pVCpu->em.s.enmState == EMSTATE_DEBUG_GUEST_NEM)
-                    rc = VBOXSTRICTRC_TODO(emR3NemSingleInstruction(pVM, pVCpu, 0 /*fFlags*/));
-#ifdef VBOX_WITH_REM /** @todo fix me? */
-                else if (pVCpu->em.s.enmState == EMSTATE_DEBUG_GUEST_REM)
-                    rc = emR3RemStep(pVM, pVCpu);
-#endif
-                else
+                save_sync_point(pVM, pVCpu, CPUMQueryGuestCtxPtr(pVCpu), -1);
                 {
                     rc = IEMExecOne(pVCpu); /** @todo add dedicated interface... */
+                    if (rc == VERR_IEM_INSTR_NOT_IMPLEMENTED)
+                    {
+                        rc = tetrane_handle_instruction_not_implemented(pVM);
+                        break;
+                    }
                     if (rc == VINF_SUCCESS || rc == VINF_EM_RESCHEDULE)
                         rc = VINF_EM_DBG_STEPPED;
+
+                    rc = VINF_EM_DBG_STEPPED;
                 }
+                save_sync_point(pVM, pVCpu, CPUMQueryGuestCtxPtr(pVCpu), 0);
                 break;
 
             /*
              * Simple events: stepped, breakpoint, stop/assertion.
              */
             case VINF_EM_DBG_STEPPED:
-                rc = DBGFR3Event(pVM, DBGFEVENT_STEPPED);
+                rc = tetrane_handle_step_instruction(pVM);
                 break;
 
             case VINF_EM_DBG_BREAKPOINT:
-                rc = DBGFR3EventBreakpoint(pVM, DBGFEVENT_BREAKPOINT);
+                rc = tetrane_handle_int3(pVM);
                 break;
 
             case VINF_EM_DBG_STOP:
