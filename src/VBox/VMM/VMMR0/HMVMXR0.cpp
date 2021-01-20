@@ -6995,6 +6995,13 @@ static void hmR0VmxUpdateTscOffsettingAndPreemptTimer(PVMCPUCC pVCpu, PVMXTRANSI
         uint64_t u64CpuHz  = SUPGetCpuHzFromGipBySetIndex(g_pSUPGlobalInfoPage, pVCpu->iHostCpuSet);
         cTicksToDeadline   = RT_MIN(cTicksToDeadline, u64CpuHz / 64);      /* 1/64th of a second */
         cTicksToDeadline   = RT_MAX(cTicksToDeadline, u64CpuHz / 2048);    /* 1/2048th of a second */
+
+        uint32_t preempt_timer_value = ASMAtomicReadU32(&pVCpu->reven.preempt_timer_value);
+        if (preempt_timer_value != 0)
+        {
+            cTicksToDeadline = preempt_timer_value;
+        }
+
         cTicksToDeadline >>= pVM->hm.s.vmx.cPreemptTimerShift;
 
         /** @todo r=ramshankar: We need to find a way to integrate nested-guest
@@ -11201,6 +11208,7 @@ static VBOXSTRICTRC hmR0VmxRunGuestCodeNormal(PVMCPUCC pVCpu, uint32_t *pcLoops)
 
     /* Paranoia. */
     Assert(VmxTransient.pVmcsInfo == &pVCpu->hm.s.vmx.VmcsInfo);
+    uint32_t     preempt_timer_value = ASMAtomicReadU32(&pVCpu->reven.preempt_timer_value);
 
     VBOXSTRICTRC rcStrict = VERR_INTERNAL_ERROR_5;
     for (;;)
@@ -11219,11 +11227,44 @@ static VBOXSTRICTRC hmR0VmxRunGuestCodeNormal(PVMCPUCC pVCpu, uint32_t *pcLoops)
         if (rcStrict != VINF_SUCCESS)
             break;
 
+        uint32_t new_preempt_timer_value = ASMAtomicReadU32(&pVCpu->reven.preempt_timer_value);
+        if (new_preempt_timer_value != preempt_timer_value)
+        {
+            preempt_timer_value = new_preempt_timer_value;
+            VmxTransient.fUpdatedTscOffsettingAndPreemptTimer = true;
+        }
+
         /* Interrupts are disabled at this point! */
         hmR0VmxPreRunGuestCommitted(pVCpu, &VmxTransient);
+
+        hmR0VmxImportGuestState(pVCpu, VmxTransient.pVmcsInfo, HMVMX_CPUMCTX_EXTRN_ALL);
+        PCPUMCTX pCtx = &pVCpu->cpum.GstCtx;
+
+        // OK to be NULL as long as pVCpu is not NULL
+        save_sync_point(NULL, pVCpu, pCtx, -1);
+
         int rcRun = hmR0VmxRunGuest(pVCpu, &VmxTransient);
         hmR0VmxPostRunGuest(pVCpu, &VmxTransient, rcRun);
         /* Interrupts are re-enabled at this point! */
+
+         /* Tetrane patch to update the guest FPU state whenever possible */
+        hmR0VmxImportGuestState(pVCpu, VmxTransient.pVmcsInfo, HMVMX_CPUMCTX_EXTRN_ALL);
+        pCtx = &pVCpu->cpum.GstCtx;
+
+         RTTHREADPREEMPTSTATE PreemptState = RTTHREADPREEMPTSTATE_INITIALIZER;
+         RTThreadPreemptDisable(&PreemptState);
+         if (CPUMR0FpuStateMaybeSaveGuestAndRestoreHost(pVCpu))
+         {
+           /* Saving the state somehow discards information in the tag word, so restore it. */
+           hmR0VmxImportGuestState(pVCpu, VmxTransient.pVmcsInfo, HMVMX_CPUMCTX_EXTRN_ALL);
+           Assert(CPUMIsGuestFPUStateActive(pVCpu));
+         }
+         RTThreadPreemptRestore(&PreemptState);
+
+        pCtx = &pVCpu->cpum.GstCtx;
+
+        Assert(CPUMQueryGuestCtxPtr(pVCpu) == pCtx);
+        save_sync_point(NULL, pVCpu, pCtx, VmxTransient.uExitReason);
 
         /*
          * Check for errors with running the VM (VMLAUNCH/VMRESUME).
@@ -12453,6 +12494,7 @@ static VBOXSTRICTRC hmR0VmxRunGuestCodeDebug(PVMCPUCC pVCpu, uint32_t *pcLoops)
     VMXTRANSIENT VmxTransient;
     RT_ZERO(VmxTransient);
     VmxTransient.pVmcsInfo = hmGetVmxActiveVmcsInfo(pVCpu);
+    uint32_t     preempt_timer_value = ASMAtomicReadU32(&pVCpu->reven.preempt_timer_value);
 
     /* Set HMCPU indicators.  */
     bool const fSavedSingleInstruction = pVCpu->hm.s.fSingleInstruction;
@@ -12488,6 +12530,14 @@ static VBOXSTRICTRC hmR0VmxRunGuestCodeDebug(PVMCPUCC pVCpu, uint32_t *pcLoops)
         rcStrict = hmR0VmxPreRunGuest(pVCpu, &VmxTransient, fStepping);
         if (rcStrict != VINF_SUCCESS)
             break;
+
+        uint32_t new_preempt_timer_value = ASMAtomicReadU32(&pVCpu->reven.preempt_timer_value);
+        if (new_preempt_timer_value != preempt_timer_value)
+        {
+            preempt_timer_value = new_preempt_timer_value;
+            VmxTransient.fUpdatedTscOffsettingAndPreemptTimer = true;
+        }
+
 
         /* Interrupts are disabled at this point! */
         hmR0VmxPreRunGuestCommitted(pVCpu, &VmxTransient);
