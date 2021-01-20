@@ -233,7 +233,9 @@ VBoxVMM_SOURCES += \
 endif
 
 VBoxVMM_SOURCES += VMMR3/tetrane/tweaks.cpp \
-	VMMR3/tetrane/vm_tweaks.cpp
+	VMMR3/tetrane/vm_tweaks.cpp \
+	VMMR3/tetrane/io.cpp \
+	VMMR3/tetrane/stream_file.cpp
 
 ifdef VBOX_WITH_NATIVE_NEM
 VBoxVMM_SOURCES.win.amd64 += VMMR3/NEMR3Native-win.cpp

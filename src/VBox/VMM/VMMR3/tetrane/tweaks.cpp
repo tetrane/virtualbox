@@ -7,6 +7,20 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
+void read_port(PVM pVM, RTIOPORT Port, uint32_t read_value, size_t cbValue)
+{
+    tetrane::tweaks::vm_tweaks* vm_tweaks = tweaks(pVM);
+    if (vm_tweaks)
+        vm_tweaks->read_port(Port, read_value, cbValue);
+}
+
+void write_port(PVM pVM, RTIOPORT Port, uint32_t written_value, size_t cbValue)
+{
+    tetrane::tweaks::vm_tweaks* vm_tweaks = tweaks(pVM);
+    if (vm_tweaks)
+        vm_tweaks->write_port(Port, written_value, cbValue);
+}
+
 void tetrane_init_tweaks(PVM pVM)
 {
     const char *work_folder = getenv("RVN_WORK_FOLDER");
