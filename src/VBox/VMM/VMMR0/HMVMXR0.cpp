@@ -7900,6 +7900,16 @@ static VBOXSTRICTRC hmR0VmxCheckForceFlags(PVMCPUCC pVCpu, PCVMXTRANSIENT pVmxTr
 {
     Assert(VMMRZCallRing3IsEnabled(pVCpu));
 
+     VBOXSTRICTRC success_return_value = VINF_SUCCESS;
+
+    // Tetrane: it is OK to pass NULL for VM as long as CPU is not NULL too.
+    if (is_sync_point_full(NULL, pVCpu)) {
+       // Make sure we respect original VBox return value as much as possible. We assume other than VINF_SUCCESS
+       // always force a return to ring3. Hence, we just override success with a force return to ring3 if it's necessary
+       // in our case. Hopefully this will be future-proof.
+       success_return_value = VINF_EM_RAW_TO_R3;
+    }
+
     /*
      * Update pending interrupts into the APIC's IRR.
      */
@@ -7915,7 +7925,7 @@ static VBOXSTRICTRC hmR0VmxCheckForceFlags(PVMCPUCC pVCpu, PCVMXTRANSIENT pVmxTr
           && !VMCPU_FF_IS_ANY_SET(pVCpu, VMCPU_FF_HP_R0_PRE_HM_MASK)
         :    !VM_FF_IS_ANY_SET(pVM, VM_FF_HP_R0_PRE_HM_STEP_MASK)
           && !VMCPU_FF_IS_ANY_SET(pVCpu, VMCPU_FF_HP_R0_PRE_HM_STEP_MASK) )
-        return VINF_SUCCESS;
+        return success_return_value;
 
     /* Pending PGM C3 sync. */
     if (VMCPU_FF_IS_ANY_SET(pVCpu,VMCPU_FF_PGM_SYNC_CR3 | VMCPU_FF_PGM_SYNC_CR3_NON_GLOBAL))
@@ -8008,7 +8018,7 @@ static VBOXSTRICTRC hmR0VmxCheckForceFlags(PVMCPUCC pVCpu, PCVMXTRANSIENT pVmxTr
     NOREF(pVmxTransient);
 #endif
 
-    return VINF_SUCCESS;
+    return success_return_value;
 }
 
 
