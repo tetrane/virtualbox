@@ -37,6 +37,7 @@
 #include <iprt/string.h>
 #include "IOMInline.h"
 
+#include <VBox/vmm/tetrane.h>
 
 /**
  * Reads an I/O port register.
@@ -88,6 +89,12 @@ VMMDECL(VBOXSTRICTRC) IOMIOPortRead(PVMCC pVM, PVMCPU pVCpu, RTIOPORT Port, uint
         PFNIOMIOPORTNEWIN pfnInCallback = pRegEntry->pfnInCallback;
         PPDMDEVINS        pDevIns       = pRegEntry->pDevIns;
 #ifndef IN_RING3
+        // We need to return to ring 3 before calling the callback pfnInCallback which will read the port
+        if (Port == 0x60 || Port == 0x64)
+        {
+            IOM_UNLOCK_SHARED(pVM);
+             return VINF_IOM_R3_IOPORT_READ;
+        }
         if (   pfnInCallback
             && pDevIns
             && pRegEntry->cPorts > 0)
@@ -137,6 +144,9 @@ VMMDECL(VBOXSTRICTRC) IOMIOPortRead(PVMCC pVM, PVMCPU pVCpu, RTIOPORT Port, uint
                     }
                 }
            }
+#ifdef IN_RING3
+            read_port(pVM, Port, *pu32Value, cbValue);
+#endif
             Log3(("IOMIOPortRead: Port=%RTiop *pu32=%08RX32 cb=%d rc=%Rrc\n", Port, *pu32Value, cbValue, VBOXSTRICTRC_VAL(rcStrict)));
             STAM_COUNTER_INC(&iomIoPortGetStats(pVM, pRegEntry, 0)->Total);
         }
@@ -149,6 +159,13 @@ VMMDECL(VBOXSTRICTRC) IOMIOPortRead(PVMCC pVM, PVMCPU pVCpu, RTIOPORT Port, uint
      * Ok, no handler for this port.
      */
     IOM_UNLOCK_SHARED(pVM);
+
+    // We need to return to ring 3 before calling the callback pfnInCallback which will read the port
+ #ifndef IN_RING3
+    if (Port == 0x60 || Port == 0x64)
+        return VINF_IOM_R3_IOPORT_READ;
+ #endif
+
     switch (cbValue)
     {
         case 1: *(uint8_t  *)pu32Value = 0xff; break;
@@ -157,6 +174,10 @@ VMMDECL(VBOXSTRICTRC) IOMIOPortRead(PVMCC pVM, PVMCPU pVCpu, RTIOPORT Port, uint
         default:
             AssertMsgFailedReturn(("Invalid I/O port size %d. Port=%d\n", cbValue, Port), VERR_IOM_INVALID_IOPORT_SIZE);
     }
+
+ #ifdef IN_RING3
+    read_port(pVM, Port, *pu32Value, cbValue);
+ #endif
     Log3(("IOMIOPortRead: Port=%RTiop *pu32=%08RX32 cb=%d rc=VINF_SUCCESS\n", Port, *pu32Value, cbValue));
     return VINF_SUCCESS;
 }
@@ -425,6 +446,9 @@ VMMDECL(VBOXSTRICTRC) IOMIOPortWrite(PVMCC pVM, PVMCPU pVCpu, RTIOPORT Port, uin
                 STAM_COUNTER_INC(&iomIoPortGetStats(pVM, pRegEntry, 0)->Total);
             }
 #endif
+ #ifdef IN_RING3
+         write_port(pVM, Port, u32Value, cbValue);
+ #endif
             Log3(("IOMIOPortWrite: Port=%RTiop u32=%08RX32 cb=%d rc=%Rrc\n", Port, u32Value, cbValue, VBOXSTRICTRC_VAL(rcStrict)));
         }
 #ifndef IN_RING3
