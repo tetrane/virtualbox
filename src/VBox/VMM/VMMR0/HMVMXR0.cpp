@@ -14458,7 +14458,9 @@ HMVMX_EXIT_NSRC_DECL hmR0VmxExitIntWindow(PVMCPUCC pVCpu, PVMXTRANSIENT pVmxTran
 
     /* Evaluate and deliver pending events and resume guest execution. */
     STAM_COUNTER_INC(&pVCpu->hm.s.StatExitIntWindow);
-    return VINF_SUCCESS;
+
+    // Tetrane: force an interrupt
+    return VINF_EM_RAW_INTERRUPT;
 }
 
 
