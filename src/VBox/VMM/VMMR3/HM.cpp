@@ -66,6 +66,7 @@
 #include <iprt/env.h>
 #include <iprt/thread.h>
 
+#include <VBox/vmm/tetrane.h>
 
 /*********************************************************************************************************************************
 *   Defined Constants And Macros                                                                                                 *
@@ -665,6 +666,7 @@ static int hmR3InitFinalizeR3(PVM pVM)
         pVCpu->hm.s.fActive = false;
         pVCpu->hm.s.fGIMTrapXcptUD = GIMShouldTrapXcptUD(pVCpu);    /* Is safe to call now since GIMR3Init() has completed. */
     }
+    tetrane_init_tweaks(pVM);
 
 #ifdef VBOX_WITH_STATISTICS
     STAM_REG(pVM, &pVM->hm.s.StatTprPatchSuccess,      STAMTYPE_COUNTER, "/HM/TPR/Patch/Success",      STAMUNIT_OCCURENCES, "Number of times an instruction was successfully patched.");

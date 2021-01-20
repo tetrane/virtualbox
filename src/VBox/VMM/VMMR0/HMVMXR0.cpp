@@ -43,6 +43,8 @@
 #include "HMVMXR0.h"
 #include "dtrace/VBoxVMM.h"
 
+#include <VBox/vmm/tetrane.h>
+
 #ifdef DEBUG_ramshankar
 # define HMVMX_ALWAYS_SAVE_GUEST_RFLAGS
 # define HMVMX_ALWAYS_SAVE_RO_GUEST_STATE
@@ -2030,6 +2032,7 @@ static int hmR0VmxStructsAlloc(PVMCC pVM)
     {
         /* Allocate the guest VMCS structures. */
         PVMCPUCC pVCpu = VMCC_GET_CPU(pVM, idCpu);
+        memset(&pVCpu->reven, 0, sizeof(pVCpu->reven));
         rc = hmR0VmxAllocVmcsInfo(pVCpu, &pVCpu->hm.s.vmx.VmcsInfo, false /* fIsNstGstVmcs */);
         if (RT_FAILURE(rc))
             goto cleanup;
