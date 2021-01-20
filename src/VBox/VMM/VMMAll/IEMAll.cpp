@@ -119,6 +119,8 @@
 #include <iprt/string.h>
 #include <iprt/x86.h>
 
+#include <VBox/vmm/tetrane.h>
+
 
 /*********************************************************************************************************************************
 *   Structures and Typedefs                                                                                                      *
@@ -5401,6 +5403,8 @@ iemRaiseXcptOrInt(PVMCPUCC    pVCpu,
      */
     pVCpu->iem.s.cbOpcode = pVCpu->iem.s.offOpcode;
 #endif
+
+    save_irq(pVCpu->CTX_SUFF(pVM), pVCpu, &pVCpu->cpum.GstCtx, u8Vector, uErr, uCr2);
 
     /*
      * Perform the V8086 IOPL check and upgrade the fault without nesting.

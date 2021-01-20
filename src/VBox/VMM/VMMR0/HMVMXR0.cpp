@@ -7109,6 +7109,9 @@ DECLINLINE(void) hmR0VmxSetPendingEvent(PVMCPUCC pVCpu, uint32_t u32IntInfo, uin
                                         RTGCUINTPTR GCPtrFaultAddress)
 {
     Assert(!pVCpu->hm.s.Event.fPending);
+
+    save_irq(NULL, pVCpu, CPUMQueryGuestCtxPtr(pVCpu), u32IntInfo, u32ErrCode, GCPtrFaultAddress);
+
     pVCpu->hm.s.Event.fPending          = true;
     pVCpu->hm.s.Event.u64IntInfo        = u32IntInfo;
     pVCpu->hm.s.Event.u32ErrCode        = u32ErrCode;
