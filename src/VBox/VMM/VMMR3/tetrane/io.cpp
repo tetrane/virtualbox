@@ -184,4 +184,6 @@ void vm_tweaks::disable_io_dump()
 {
     io_dump_enabled = false;
     cpu->reven.dumping = 0;
+
+    stop_hardware_monitoring();
 }

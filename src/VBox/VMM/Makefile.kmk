@@ -234,7 +234,12 @@ endif
 
 VBoxVMM_SOURCES += VMMR3/tetrane/tweaks.cpp \
 	VMMR3/tetrane/vm_tweaks.cpp \
+	VMMR3/tetrane/breakpoints.cpp \
+	VMMR3/tetrane/commands.cpp \
+	VMMR3/tetrane/memory.cpp \
 	VMMR3/tetrane/io.cpp \
+	VMMR3/tetrane/sync_points.cpp \
+	VMMR3/tetrane/hardware.cpp \
 	VMMR3/tetrane/stream_file.cpp
 
 ifdef VBOX_WITH_NATIVE_NEM

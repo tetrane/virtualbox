@@ -7,6 +7,31 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
+VBOXSTRICTRC tetrane_handle_step_instruction(PVM pVM)
+{
+    tetrane::tweaks::vm_tweaks* vm_tweaks = tweaks(pVM);
+    if (vm_tweaks)
+        return tweaks(pVM)->handle_step_instruction();
+    return VINF_SUCCESS;
+}
+
+VBOXSTRICTRC tetrane_handle_int3(PVM pVM)
+{
+    tetrane::tweaks::vm_tweaks* vm_tweaks = tweaks(pVM);
+    if (vm_tweaks)
+        return tweaks(pVM)->handle_int3();
+    return VINF_SUCCESS;
+}
+
+VBOXSTRICTRC tetrane_handle_instruction_not_implemented(PVM pVM)
+{
+    tetrane::tweaks::vm_tweaks* vm_tweaks = tweaks(pVM);
+    if (vm_tweaks)
+        return tweaks(pVM)->handle_instruction_not_implemented();
+
+    return VINF_SUCCESS;
+}
+
 void read_port(PVM pVM, RTIOPORT Port, uint32_t read_value, size_t cbValue)
 {
     tetrane::tweaks::vm_tweaks* vm_tweaks = tweaks(pVM);
@@ -20,6 +45,21 @@ void write_port(PVM pVM, RTIOPORT Port, uint32_t written_value, size_t cbValue)
     if (vm_tweaks)
         vm_tweaks->write_port(Port, written_value, cbValue);
 }
+
+void flush_data(PVM pVM)
+{
+    tetrane::tweaks::vm_tweaks* vm_tweaks = tweaks(pVM);
+    if (vm_tweaks)
+        vm_tweaks->flush_data();
+}
+
+void register_hardware_access(PVM pVM, struct saved_hardware_access *access, const unsigned char *data)
+{
+    tetrane::tweaks::vm_tweaks* vm_tweaks = tweaks(pVM);
+    if (vm_tweaks)
+        vm_tweaks->register_hardware_access(access, data);
+}
+
 
 void tetrane_init_tweaks(PVM pVM)
 {
